@@ -38,13 +38,23 @@ export class CoinDTO {
     };
   }
 
-  static toDTO(dto) {
+  static fromEntity(entity) {
     return new CoinDTO({
-      id: dto.id,
-      stateName: dto.title.match(/\(([^)]+)\)/)?.[1] || dto.stateName,
-      obvThumb: dto.obverse_thumbnail || dto.obvThumb,
-      revThumb: dto.reverse_thumbnail || dto.revThumb,
-      mintYear: dto.min_year || dto.mintYear,
+      id: entity.id,
+      stateName: dto.stateName,
+      obvThumb: dto.obvThumb,
+      revThumb: dto.revThumb,
+      mintYear: dto.mintYear,
+    });
+  }
+
+  static toDTO(entity) {
+    return new CoinDTO({
+      id: entity.id,
+      stateName: entity.title.match(/\(([^)]+)\)/)?.[1],
+      obvThumb: entity.obverse_thumbnail,
+      revThumb: entity.reverse_thumbnail,
+      mintYear: entity.min_year,
     });
   }
 }
