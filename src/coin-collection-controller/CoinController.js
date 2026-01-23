@@ -9,10 +9,10 @@ export class CoinController extends APIController {
 
   async getCoinByStateName(req, res) {
     return super.GET(req, res, "getCoinByStateName", async () => {
-      const coinDto = await this.coinService.getCoinByStateName(
+      const result = await this.coinService.getCoinByStateName(
         req.params.stateName,
       );
-      if (!coinDto) {
+      if (!result.success) {
         const entry = Logger.log("Coin not found", {
           stateName: req.params.stateName,
           operation: "getCoinByStateName",
@@ -20,7 +20,7 @@ export class CoinController extends APIController {
         Logger.methods.WARN(entry);
         return { status: 404, data: { error: "Coin not found for StateName" } };
       }
-      return { status: 200, data: coinDto.toJSON() };
+      return { status: 200, data: result.coin.toJSON() };
     });
   }
 
@@ -35,7 +35,7 @@ export class CoinController extends APIController {
         Logger.methods.WARN(entry);
         return { status: 400, data: { error: "Client Data Invalid" } };
       }
-      return { status: 201, data: result };
+      return { status: 201, data: result.ids };
     });
   }
 }

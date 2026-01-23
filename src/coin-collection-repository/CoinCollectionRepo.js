@@ -8,17 +8,25 @@ export class CoinCollectionRepo {
   }
 
   async saveAll(entities) {
-    const ids = [];
-    for (const entity of entities) {
-      const cleanName = entity.stateName.toLowerCase().replace(/\s+/g, "");
-      await this.oort.putObject(`coins/${cleanName}.json`, entity.toJSON());
-      ids.push(entity.id);
-    }
-    return ids;
+    await Promise.all(
+      entities.map((entity) => {
+        const cleanName = entity.stateName.toLowerCase().replace(/\s+/g, "");
+        return this.oort.putObject(`coins/${cleanName}.json`, entity.toJSON());
+      }),
+    );
+    return {
+      success: true,
+      ids: entities.map((e) => e.id),
+    };
   }
+
   async getCoinByStateName(stateName) {
     const cleanName = stateName.toLowerCase().replace(/\s+/g, "");
-    const key = `coins/${cleanName}.json`;
-    return await this.oort.getObject(key);
+    const response = await this.oort.getObject(`coins/${cleanName}.json`);
+    const entity = await response.Body.transformToString();
+    return {
+      success: true,
+      entity: JSON.parse(entity),
+    };
   }
 }

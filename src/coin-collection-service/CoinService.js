@@ -9,8 +9,12 @@ export class CoinService {
 
   async getCoinByStateName(stateName) {
     CoinValidator.validateStateName(stateName);
-    const entity = await this.coinCollectionRepo.getCoinByStateName(stateName);
-    return entity ? CoinDTO.toDTO(entity) : null;
+    const { success, entity } =
+      await this.coinCollectionRepo.getCoinByStateName(stateName);
+    return {
+      success,
+      coin: CoinDTO.toDTO(entity),
+    };
   }
 
   async postAllStateCoins(rawObjects) {

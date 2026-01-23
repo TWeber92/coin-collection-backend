@@ -28,7 +28,6 @@ export class OORTStorageClient {
       ContentType: "application/json",
     });
     await this.client.send(command);
-    return { success: true, key };
   }
 
   async getObject(key) {
@@ -36,9 +35,7 @@ export class OORTStorageClient {
       Bucket: this.bucket,
       Key: key,
     });
-    const response = await this.client.send(command);
-    const bodyString = await response.Body.transformToString();
-    return JSON.parse(bodyString);
+    return await this.client.send(command);
   }
 
   async deleteObject(key) {
