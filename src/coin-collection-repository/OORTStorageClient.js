@@ -17,7 +17,7 @@ export class OORTStorageClient {
       forcePathStyle: true,
     });
     this.bucket = bucket || "myapp-main";
-    console.log("Putting object to:", key, "in bucket:", this.bucket);
+    console.log(!!accessKey, !!secretKey, "in bucket:", this.bucket);
   }
 
   async putObject(key, dataObject) {
