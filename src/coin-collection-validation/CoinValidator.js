@@ -2,7 +2,7 @@ import { CoinCollectionError } from "../coin-collection-exception/CoinCollection
 
 export class CoinValidator {
   static validateStateName(stateName) {
-    const extracted = stateName.match(/\(([^)]+)\)/)?.[1];
+    const extracted = stateName.toLowerCase().replace(/[^a-z]/g, "");
     if (!extracted) {
       throw new CoinCollectionError(
         `Invalid StateName format: "${stateName}". Expected "(StateName)" pattern`,
