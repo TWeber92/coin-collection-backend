@@ -33,8 +33,8 @@ export class APIController {
       res.status(result.status).json(result.data);
     } catch (error) {
       const coinErr = this.#handleError(error, req, operation);
-      const status = coinErr ? result.status : 500;
-      res.status(status).json(apiError.toJSON());
+      const status = coinErr ? 400 : 500;
+      res.status(status).json(error.toJSON());
     }
   }
 
@@ -47,8 +47,8 @@ export class APIController {
       res.status(result.status).json(result.data);
     } catch (error) {
       const coinErr = this.#handleError(error, req, operation);
-      const status = coinErr ? result.status : 500;
-      res.status(status).json(apiError.toJSON());
+      const status = coinErr ? 400 : 500;
+      res.status(status).json(error.toJSON());
     }
   }
 }
