@@ -11,6 +11,11 @@ export class Main {
       bucket: process.env.OORT_BUCKET,
     };
     this.controller = this.getController();
+    console.log("OORT Config:", {
+      hasAccessKey: !!this.config.accessKey,
+      hasSecretKey: !!this.config.secretKey,
+      bucket: this.config.bucket,
+    });
   }
 
   getRepo() {
