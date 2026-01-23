@@ -25,7 +25,7 @@ export class CoinController extends APIController {
   }
 
   async postAllStateCoins(req, res) {
-    return super.POST(req, res, async () => {
+    return super.POST(req, res, "postAllStateCoins", async () => {
       const result = await this.coinService.postAllStateCoins(req.body);
       if (!result.success) {
         const entry = Logger.log("Client Data Invalid", {

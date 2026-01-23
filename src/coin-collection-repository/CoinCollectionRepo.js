@@ -4,6 +4,7 @@ export class CoinCollectionRepo {
   constructor(accessKey, secretKey, bucket) {
     this.oort = new OORTStorageClient(accessKey, secretKey, bucket);
     this.bucket = bucket;
+    console.log("Creating OORT client with bucket:", bucket);
   }
 
   async saveAll(entities) {
