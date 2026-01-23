@@ -10,6 +10,7 @@ export class APIController {
           error.message,
           error.name || "UnknownError",
           operation,
+          error.status,
         );
     const meta = {
       errorName: apiError.name,
@@ -20,7 +21,7 @@ export class APIController {
     };
     const entry = Logger.log(apiError.message, meta);
     Logger.methods.ERROR(entry);
-    return instance;
+    return apiError;
   }
 
   async GET(req, res, operation, handler) {
@@ -33,8 +34,8 @@ export class APIController {
       res.status(result.status).json(result.data);
     } catch (error) {
       const coinErr = this.#handleError(error, req, operation);
-      const status = coinErr ? 400 : 500;
-      res.status(status).json(error.toJSON());
+      const status = coinErr.status;
+      res.status(status).json(coinErr.toJSON());
     }
   }
 
@@ -47,8 +48,8 @@ export class APIController {
       res.status(result.status).json(result.data);
     } catch (error) {
       const coinErr = this.#handleError(error, req, operation);
-      const status = coinErr ? 400 : 500;
-      res.status(status).json(error.toJSON());
+      const status = coinErr.status;
+      res.status(status).json(coinErr.toJSON());
     }
   }
 }

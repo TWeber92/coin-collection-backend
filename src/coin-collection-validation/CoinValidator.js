@@ -8,6 +8,7 @@ export class CoinValidator {
         `Invalid StateName format: "${stateName}". Expected "(StateName)" pattern`,
         "ValidatorError",
         "validateStateName",
+        400,
       );
     }
     return extracted;
@@ -37,6 +38,7 @@ export class CoinValidator {
         `Validation failed: ${errors.join(", ")}`,
         "ValidatorError",
         "validateCoinData",
+        400,
       );
     }
 
