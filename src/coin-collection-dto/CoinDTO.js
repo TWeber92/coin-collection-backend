@@ -42,9 +42,9 @@ export class CoinDTO {
     return new CoinDTO({
       id: dto.id,
       stateName: dto.title.match(/\(([^)]+)\)/)?.[1] || dto.stateName,
-      obvThumb: dto.obverse_thumbnail,
-      revThumb: dto.reverse_thumbnail,
-      mintYear: dto.min_year,
+      obvThumb: dto.obverse_thumbnail || dto.obvThumb,
+      revThumb: dto.reverse_thumbnail || dto.revThumb,
+      mintYear: dto.min_year || dto.mintYear,
     });
   }
 }
