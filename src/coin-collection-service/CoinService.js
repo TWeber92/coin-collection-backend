@@ -13,11 +13,11 @@ export class CoinService {
     return entity ? CoinDTO.toDTO(entity) : null;
   }
 
-  postAllCoinObjects(rawObjects) {
+  async postAllStateCoins(rawObjects) {
     const coins = JSON.parse(rawObjects);
     coins.map((coin) => CoinValidator.validateCoinData(coin));
     const coinDTOs = coins.map((coin) => CoinDTO.toDTO(coin));
     const coinEntities = coinDTOs.map((coin) => CoinEntity.fromDto(coin));
-    return this.coinCollectionRepo.saveAll(coinEntities);
+    return await this.coinCollectionRepo.saveAll(coinEntities);
   }
 }
