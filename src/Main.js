@@ -13,16 +13,12 @@ export class Main {
     this.controller = this.getController();
   }
 
-  getStorage() {
-    return new OORTStorageClient(
+  getRepo() {
+    return new CoinCollectionRepo(
       this.config.accessKey,
       this.config.secretKey,
       this.config.bucket,
     );
-  }
-
-  getRepo() {
-    return new CoinCollectionRepo(this.getStorage());
   }
 
   getService() {
