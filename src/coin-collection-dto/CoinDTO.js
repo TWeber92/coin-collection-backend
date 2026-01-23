@@ -41,10 +41,10 @@ export class CoinDTO {
   static fromEntity(entity) {
     return new CoinDTO({
       id: entity.id,
-      stateName: dto.stateName,
-      obvThumb: dto.obvThumb,
-      revThumb: dto.revThumb,
-      mintYear: dto.mintYear,
+      stateName: entity.stateName,
+      obvThumb: entity.obvThumb,
+      revThumb: entity.revThumb,
+      mintYear: entity.mintYear,
     });
   }
 
