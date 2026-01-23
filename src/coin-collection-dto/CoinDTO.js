@@ -41,7 +41,7 @@ export class CoinDTO {
   static toDTO(dto) {
     return new CoinDTO({
       id: dto.id,
-      stateName: dto.title.match(/\(([^)]+)\)/)?.[1],
+      stateName: dto.title.match(/\(([^)]+)\)/)?.[1] || dto.stateName,
       obvThumb: dto.obverse_thumbnail,
       revThumb: dto.reverse_thumbnail,
       mintYear: dto.min_year,
