@@ -38,7 +38,7 @@ export class APIController {
     }
   }
 
-  async POST(req, res, handler) {
+  async POST(req, res, operation, handler) {
     try {
       const result = await handler();
       if (result?.status === 400) {
