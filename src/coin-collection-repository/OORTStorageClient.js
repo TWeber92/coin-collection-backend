@@ -8,8 +8,8 @@ import {
 export class OORTStorageClient {
   constructor(accessKey, secretKey, bucket) {
     this.client = new S3Client({
-      endpoint: "https://s3.oort.cloud",
-      region: "auto",
+      endpoint: "https://s3-standard.oortech.com",
+      region: "us-east-1",
       credentials: {
         accessKeyId: accessKey,
         secretAccessKey: secretKey,
