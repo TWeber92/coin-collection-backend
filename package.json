@@ -1,16 +1,26 @@
 {
-  "name": "functions",
+  "name": "coin-collection-backend",
   "version": "1.0.0",
-  "type": "module", 
-  "main": "getCoin.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TWeber92/coin-collection-backend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TWeber92/coin-collection-backend/issues"
+  },
+  "homepage": "https://github.com/TWeber92/coin-collection-backend#readme",
   "description": "",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.971.0"
+    "@aws-sdk/client-s3": "^3.975.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.60.0"
   }
 }
