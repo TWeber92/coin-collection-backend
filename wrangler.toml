@@ -1,15 +1,5 @@
 name = "coin-api"
+main = "coin-collection-proxy/functions/index.js"
 compatibility_date = "2024-01-01"
 
-[[workers]]
-name = "get-coin"
-main = "coin-collection-proxy/functions/getCoin.js"
 
-[[workers]]  
-name = "post-coins"
-main = "coin-collection-proxy/functions/postAll.js"
-
-[vars]
-OORT_ACCESS_KEY = "secret"
-OORT_SECRET_KEY = "secret"
-OORT_BUCKET = "secret"
