@@ -17,11 +17,11 @@ export class CoinService {
     };
   }
 
-  async postAllStateCoins(DtoObjects) {
-    const coins = JSON.parse(DtoObjects);
-    coins.map((dto) => CoinValidator.validateCoinData(dto));
-    // const coinDTOs = coins.map((dto) => CoinDTO.toDTO(coin));
-    const coinEntities = coins.map((dto) => CoinEntity.fromDto(dto));
+  async postAllStateCoins(entityObjects) {
+    const coins = JSON.parse(entityObjects);
+    coins.map((entity) => CoinValidator.validateCoinData(entity));
+    const coinDTOs = coins.map((entity) => CoinDTO.toDTO(entity));
+    const coinEntities = coinDTOs.map((dto) => CoinEntity.fromDto(dto));
     return await this.coinCollectionRepo.saveAll(coinEntities);
   }
 }
