@@ -4,11 +4,11 @@ import { CoinCollectionRepo } from "./coin-collection-repository/CoinCollectionR
 import { CoinService } from "./coin-collection-service/CoinService";
 
 export class Main {
-  constructor(process) {
+  constructor(env) {
     this.config = {
-      accessKey: process.env.OORT_ACCESS_KEY,
-      secretKey: process.env.OORT_SECRET_KEY,
-      bucket: process.env.OORT_BUCKET,
+      accessKey: env.OORT_ACCESS_KEY,
+      secretKey: env.OORT_SECRET_KEY,
+      bucket: env.OORT_BUCKET,
     };
     this.controller = this.getController();
     console.log("OORT Config:", {

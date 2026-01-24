@@ -1,7 +1,7 @@
 import { Main } from "../../src/Main";
 
-export const handler = async (event) => {
-  const main = new Main(process);
+export const handler = async (event, env) => {
+  const main = new Main(env);
   const controller = main.controller;
 
   const req = {
