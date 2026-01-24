@@ -30,11 +30,11 @@ export class CoinDTO {
 
   toJSON() {
     return {
-      id: dto.id,
-      stateName: dto.stateName,
-      obvThumb: dto.obvThumb,
-      revThumb: dto.revThumb,
-      mintYear: dto.mintYear,
+      id: this.id,
+      stateName: this.stateName,
+      obvThumb: this.obvThumb,
+      revThumb: this.revThumb,
+      mintYear: this.mintYear,
     };
   }
 
