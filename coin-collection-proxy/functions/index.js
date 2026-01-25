@@ -3,6 +3,8 @@ import { handler as postAll } from "./postAll.js";
 
 export default {
   async fetch(request, env) {
+    console.log(env);
+
     const url = new URL(request.url);
     const event = {
       path: url.pathname,
