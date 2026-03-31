@@ -19,6 +19,13 @@ export class OORTStorageClient {
     this.bucket = bucket || "myapp-main";
     console.log(!!accessKey, !!secretKey, "in bucket:", this.bucket);
   }
+  async getObject(key) {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+    return await this.client.send(command);
+  }
 
   async putObject(key, dataObject) {
     const command = new PutObjectCommand({
@@ -28,14 +35,6 @@ export class OORTStorageClient {
       ContentType: "application/json",
     });
     await this.client.send(command);
-  }
-
-  async getObject(key) {
-    const command = new GetObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
-    return await this.client.send(command);
   }
 
   async deleteObject(key) {
