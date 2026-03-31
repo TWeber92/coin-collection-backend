@@ -5,6 +5,16 @@ export default {
   async fetch(request, env) {
     console.log(env);
 
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "http://localhost:5500",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    };
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
+
     const url = new URL(request.url);
     const event = {
       path: url.pathname,
@@ -21,9 +31,13 @@ export default {
       return new Response("Not Found", { status: 404 });
     }
     const response = await router();
+    const responseHeaders = {
+      ...response.headers,
+      ...corsHeaders,
+    };
     return new Response(response.body, {
       status: response.statusCode,
-      headers: response.headers,
+      headers: responseHeaders,
     });
   },
 };
