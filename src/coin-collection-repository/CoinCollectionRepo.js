@@ -7,8 +7,7 @@ export class CoinCollectionRepo {
   async getCoinByStateName(stateName) {
     const cleanName = stateName.toLowerCase().replace(/\s+/g, "");
     const res = await this.oort.getObject(`coins/${cleanName}.json`);
-    const data = res.Body.transformToString();
-    return JSON.parse(data);
+    return res.json();
   }
 
   async saveAll(entities) {

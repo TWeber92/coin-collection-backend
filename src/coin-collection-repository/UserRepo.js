@@ -7,8 +7,7 @@ export class UserRepo {
 
   async getUserById(id) {
     const res = await this.oort.getObject(`users/${id}.json`);
-    const data = res.Body.transformToString();
-    return JSON.parse(data);
+    return res.json();
   }
   async postUserData(user) {
     return this.putUserData(user);

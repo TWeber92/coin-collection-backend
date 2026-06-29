@@ -7,8 +7,7 @@ export class AuthRepository {
 
   async getAuthDataByPath(path) {
     const res = await this.oort.getObject(`auth/${path}.json`);
-    const data = res.Body.transformToString();
-    return JSON.parse(data);
+    return res.json();
   }
   async postAuthDataByPath(entity, path) {
     await this.oort.putObject(`auth/${path}.json`, entity);
