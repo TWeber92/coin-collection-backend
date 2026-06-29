@@ -17,9 +17,9 @@ export class AuthService {
   }
   async getAuthDataByValue({ value, path }) {
     const entity = await this.#authRepo.getAuthDataByPath(path);
-    const value = Object.entries(entity).find(([k, v]) => v === value) || null;
-    if (!value) throw NotFoundError(path, value);
-    return { id: value[0] };
+    const entry = Object.entries(entity).find(([k, v]) => v === value) || null;
+    if (!entry) throw NotFoundError(path, value);
+    return { id: entry[0] };
   }
   async postAuthData({ lookupKey, sub, path }) {
     //signup - data.json
