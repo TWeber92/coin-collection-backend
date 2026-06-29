@@ -48,13 +48,13 @@ export class CoinDTO {
     });
   }
 
-  static toDTO(entity) {
+  static toDTO(dto) {
     return new CoinDTO({
-      id: entity.id,
-      stateName: entity.title.match(/\(([^)]+)\)/)?.[1],
-      obvThumb: entity.obverse_thumbnail,
-      revThumb: entity.reverse_thumbnail,
-      mintYear: entity.min_year,
+      id: dto.id,
+      stateName: dto.title.match(/\(([^)]+)\)/)?.[1],
+      obvThumb: dto.obverse_thumbnail,
+      revThumb: dto.reverse_thumbnail,
+      mintYear: dto.min_year,
     });
   }
 }

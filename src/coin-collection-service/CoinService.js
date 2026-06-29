@@ -9,18 +9,13 @@ export class CoinService {
 
   async getCoinByStateName(stateName) {
     CoinValidator.validateStateName(stateName);
-    const { success, entity } =
-      await this.coinCollectionRepo.getCoinByStateName(stateName);
-    return {
-      success,
-      coin: CoinDTO.fromEntity(entity),
-    };
+    const entity = await this.coinCollectionRepo.getCoinByStateName(stateName);
+    return CoinDTO.fromEntity(entity);
   }
 
-  async postAllStateCoins(entityObjects) {
-    const coins = JSON.parse(entityObjects);
-    coins.map((entity) => CoinValidator.validateCoinData(entity));
-    const coinDTOs = coins.map((entity) => CoinDTO.toDTO(entity));
+  async postAllStateCoins(dtos) {
+    dtos.map((dto) => CoinValidator.validateCoinData(dto));
+    const coinDTOs = dtos.map((dto) => CoinDTO.toDTO(dto));
     const coinEntities = coinDTOs.map((dto) => CoinEntity.fromDto(dto));
     return await this.coinCollectionRepo.saveAll(coinEntities);
   }

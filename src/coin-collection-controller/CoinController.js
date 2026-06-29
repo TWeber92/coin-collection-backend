@@ -9,33 +9,56 @@ export class CoinController extends APIController {
 
   async getCoinByStateName(req, res) {
     return super.GET(req, res, "getCoinByStateName", async () => {
-      const result = await this.coinService.getCoinByStateName(
+      const coin = await this.coinService.getCoinByStateName(
         req.params.stateName,
       );
-      if (!result.success) {
-        const entry = Logger.log("Coin not found", {
-          stateName: req.params.stateName,
-          operation: "getCoinByStateName",
-        });
-        Logger.methods.WARN(entry);
-        return { status: 404, data: { error: "Coin not found for StateName" } };
-      }
-      return { status: 200, data: result.coin.toJSON() };
+      return { status: 200, data: coin };
+      // const { coin, success, statusCode, error } =
+      //   await this.coinService.getCoinByStateName(req.params.stateName);
+      // if (!success)
+      //   return this.#handleLogger(
+      //     req,
+      //     statusCode,
+      //     error,
+      //     `Coin not found for StateName ${req.params.stateName}`,
+      //     "getCoinByStateName",
+      //   );
+      // return { status: statusCode, data: coin.toJSON() };
     });
   }
 
   async postAllStateCoins(req, res) {
     return super.POST(req, res, "postAllStateCoins", async () => {
-      const result = await this.coinService.postAllStateCoins(req.body);
-      if (!result.success) {
-        const entry = Logger.log("Client Data Invalid", {
-          ids: result || [],
-          operation: "postAllStateCoins",
-        });
-        Logger.methods.WARN(entry);
-        return { status: 400, data: { error: "Client Data Invalid" } };
-      }
-      return { status: 201, data: result.ids };
+      const ids = await this.coinService.postAllStateCoins(req.body);
+      return { status: 200, data: ids };
+      // const { ids, success, statusCode, error } =
+      //   await this.coinService.postAllStateCoins(req.body);
+      // if (!success)
+      //   return this.#handleLogger(
+      //     req,
+      //     statusCode,
+      //     error,
+      //     `Failed to post coins`,
+      //     "postAllStateCoins",
+      //   );
+      // return { status: statusCode, data: ids };
     });
   }
+
+  // #handleLogger(req, status, error, context, op) {
+  //   const entry = Logger.log(`${error.name}, ${error.message}`, {
+  //     context,
+  //     op,
+  //   });
+  //   Logger.methods.WARN(entry);
+  //   return {
+  //     status,
+  //     data: {
+  //       error: {
+  //         message: `${error.message}, ${context}`,
+  //         name: `${error.name}`,
+  //       },
+  //     },
+  //   };
+  // }
 }
