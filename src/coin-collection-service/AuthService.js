@@ -4,6 +4,7 @@ import {
 } from "../coin-collection-exception/CoinCollectionError";
 
 export class AuthService {
+  #authRepo;
   constructor(authRepo) {
     this.#authRepo = authRepo;
   }
