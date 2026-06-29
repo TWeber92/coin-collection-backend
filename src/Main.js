@@ -64,6 +64,6 @@ export class Main {
   instantiateControllers() {
     this.controller = this.getController();
     this.userController = this.getUserController();
-    this.authController = this.getAuthCOntroller();
+    this.authController = this.getAuthController();
   }
 }
