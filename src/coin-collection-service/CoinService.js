@@ -10,6 +10,8 @@ export class CoinService {
   async getCoinByStateName(stateName) {
     CoinValidator.validateStateName(stateName);
     const entity = await this.coinCollectionRepo.getCoinByStateName(stateName);
+    console.log(entity);
+
     return CoinDTO.fromEntity(entity);
   }
 
