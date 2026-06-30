@@ -70,7 +70,6 @@ export class OORTStorageClient {
       NoSuchBucket: "Storage bucket not found",
       SlowDown: "Too many requests, please try again later",
     };
-
     return map[error.name] || `${operation} failed for "${key}"`;
   }
 }
