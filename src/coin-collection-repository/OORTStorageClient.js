@@ -57,19 +57,27 @@ export class OORTStorageClient {
       const res = await this.client.send(command);
       return res;
     } catch (error) {
+      const { XMLParser } = require("fast-xml-parser");
+      const parser = new XMLParser();
+      const parsed = parser.parse(error.$responseBodyText);
       const operation = command.constructor.name;
-      const key = command.input?.Key || "Unknown";
-      const message = this.#getFriendlyMessage(error, operation, key);
-      throw new OortError(message, error);
+      const key = parsed.Error.Key;
+      const message = this.#getFriendlyMessage(
+        parsed.Error.Code,
+        operation,
+        key,
+      );
+      throw new OortError(message, parsed.Error);
     }
   }
-  #getFriendlyMessage(error, operation, key) {
+  #getFriendlyMessage(code, operation, key) {
     const map = {
       NoSuchKey: `Resource "${key}" not found`,
       AccessDenied: `Permission denied for "${key}"`,
       NoSuchBucket: "Storage bucket not found",
       SlowDown: "Too many requests, please try again later",
+      NoSuchObjectStat: `Object path: ${key} does not exist`,
     };
-    return map[error.name] || `${operation} failed for "${key}"`;
+    return `${operation}: ${map[code]}` || `${operation} failed for "${key}"`;
   }
 }

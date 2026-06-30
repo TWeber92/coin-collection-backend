@@ -27,6 +27,6 @@ export class UserService {
     const entity = await this.getUserById(id);
     const user = userDTO.fromEntity(entity);
     user.collection = collection;
-    await this.#userRepo.putUserData(UserEntity.fromDTO(user));
+    await this.#userRepo.updateUserData(UserEntity.fromDTO(user));
   }
 }

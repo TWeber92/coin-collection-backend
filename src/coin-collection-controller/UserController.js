@@ -22,7 +22,7 @@ export class UserController extends APIController {
 
   async updateUserData(req, res) {
     super.PUT(req, res, "putUserData", async () => {
-      await this.#userService.putUserData(req.body);
+      await this.#userService.updateUserData(req.body);
       return { status: 200 };
     });
   }

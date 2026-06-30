@@ -13,7 +13,7 @@ export class UserRepo {
     return this.putUserData(user);
   }
 
-  async putUserData(user) {
+  async updateUserData(user) {
     await this.oort.putObject(`users/${user.id}.json`, user.toJSON());
   }
 }

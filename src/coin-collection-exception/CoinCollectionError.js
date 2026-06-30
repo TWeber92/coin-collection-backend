@@ -64,7 +64,7 @@ export class OortError extends CoinCollectionError {
       `OORT operation failed: ${message}`,
       "OortError",
       {
-        originalError: originalError?.message,
+        originalError: originalError?.Message,
       },
       500,
     );

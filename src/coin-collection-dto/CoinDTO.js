@@ -39,6 +39,7 @@ export class CoinDTO {
   }
 
   static fromEntity(entity) {
+    console.log("entity:", entity);
     return new CoinDTO({
       id: entity.id,
       stateName: entity.stateName,
@@ -48,7 +49,7 @@ export class CoinDTO {
     });
   }
 
-  static toDTO(dto) {
+  static fromDTO(dto) {
     return new CoinDTO({
       id: dto.id,
       stateName: dto.title.match(/\(([^)]+)\)/)?.[1],

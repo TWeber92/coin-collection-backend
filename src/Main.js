@@ -17,8 +17,6 @@ export class Main {
       bucket: env.OORT_BUCKET,
     };
     this.instantiateControllers();
-    console.log("Access Key exists?", !!env.OORT_ACCESS_KEY);
-    console.log("Secret Key exists?", !!env.OORT_SECRET_KEY);
   }
 
   getRepo() {
