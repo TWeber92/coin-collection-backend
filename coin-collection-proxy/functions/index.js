@@ -28,17 +28,11 @@ export default {
       "POST:/api/login": async () => await getUser(event, env),
       "POST:/api/signup": async () => await postUser(event, env),
       "POST:/api/coins": async () => await postAll(event, env),
-      "PUT/api/user/collection": async () => await putCollection(event, env),
+      "PUT:/api/user/collection": async () => await putCollection(event, env),
     };
     const router = routerMap[`${request.method}:${url.pathname}`];
-    if (!router) {
+    if (!router)
       return new Response("Not Found", { status: 404, headers: corsHeaders });
-    }
-    const response = await router();
-    const responseHeaders = {
-      ...response.headers,
-      ...corsHeaders,
-    };
 
     try {
       const response = await router();

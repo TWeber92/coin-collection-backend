@@ -41,24 +41,12 @@ export const handler = async (event, env) => {
     !user.roles.includes("admin") &&
     !user.permissions.includes("write:postAll")
   )
-    throw new AuthorizationError();
-  // {
-  //   const body = JSON.parse(responseBody);
-  //   res.status(403).json({
-  //     ...body.data,
-  //     message: `User: ${body.id} is not authorized`,
-  //     name: "AuthorizationError",
-  //     context: "coin-collection-proxy/postAll",
-  //   });
-  //   return handleReturn();
-  // }
+    throw new AuthorizationError(user.email, "coin-collection-proxy/postAll");
+
   await controller.postAllStateCoins(req, res);
-  return handleReturn();
-};
-function handleReturn() {
   return {
     statusCode: responseStatus,
     headers: { "Content-Type": "application/json" },
     body: responseBody,
   };
-}
+};
