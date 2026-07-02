@@ -39,7 +39,6 @@ export class CoinDTO {
   }
 
   static fromEntity(entity) {
-    console.log("entity:", entity);
     return new CoinDTO({
       id: entity.id,
       stateName: entity.stateName,
