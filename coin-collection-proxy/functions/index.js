@@ -6,9 +6,14 @@ import { handler as putCollection } from "./putUserCollection.js";
 
 export default {
   async fetch(request, env) {
+    const ALLOWED = new Set([
+      "http://localhost:5500",
+      "https://tweber92.github.io",
+    ]);
+    const origin = request.headers.get("Origin");
+    const allowOrigin = ALLOWED.has(origin) ? origin : "null";
     const corsHeaders = {
-      "Access-Control-Allow-Origin":
-        "http://localhost:5500, https://tweber92.github.io",
+      "Access-Control-Allow-Origin": allowOrigin,
       "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
     };
