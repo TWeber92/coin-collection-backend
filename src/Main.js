@@ -16,6 +16,8 @@ export class Main {
       secretKey: env.OORT_SECRET_KEY,
       bucket: env.OORT_BUCKET,
     };
+    console.log(this.config);
+    
     this.instantiateControllers();
   }
 
