@@ -5,7 +5,7 @@ export const handler = async (event, env) => {
   let responseStatus = 200;
   let responseBody;
   const main = new Main(env);
-  const controller = main.controller;
+  const controller = main.coinController;
   const stateName = event.queryStringParameters.stateName;
   const req = {
     params: { stateName },

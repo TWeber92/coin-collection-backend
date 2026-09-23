@@ -7,7 +7,8 @@
     "dev": "wrangler dev",
     "local": "node --watch --import=extensionless/register --env-file=.env local-server.js",
     "deploy": "wrangler deploy",
-    "test": "wrangler dev --test-scheduled"
+    "test:unit": "node --import=extensionless/register --test",
+    "test:scheduled": "wrangler dev --test-scheduled"
   },
   "repository": {
     "type": "git",
