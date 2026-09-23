@@ -1,9 +1,11 @@
 {
   "name": "coin-collection-backend",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "wrangler dev",
+    "local": "node --watch --import=extensionless/register --env-file=.env local-server.js",
     "deploy": "wrangler deploy",
     "test": "wrangler dev --test-scheduled"
   },
