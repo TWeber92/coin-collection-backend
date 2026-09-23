@@ -5,6 +5,7 @@ import {
   DeleteObjectCommand,
   // ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
+import { XMLParser } from "fast-xml-parser";
 import { OortError } from "../coin-collection-exception/CoinCollectionError";
 export class OORTStorageClient {
   constructor(accessKey, secretKey, bucket) {
@@ -20,11 +21,10 @@ export class OORTStorageClient {
     this.bucket = bucket || "myapp-main";
   }
   async getObject(key) {
-    const command = new GetObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
-    return await this.OORT(command);
+    const command = new GetObjectCommand({ Bucket: this.bucket, Key: key });
+    const res = await this.OORT(command);
+    const text = await res.Body.transformToString();
+    return JSON.parse(text);
   }
 
   async putObject(key, dataObject) {
@@ -57,7 +57,6 @@ export class OORTStorageClient {
       const res = await this.client.send(command);
       return res;
     } catch (error) {
-      const { XMLParser } = require("fast-xml-parser");
       const parser = new XMLParser();
       const parsed = parser.parse(error.$responseBodyText);
       const operation = command.constructor.name;

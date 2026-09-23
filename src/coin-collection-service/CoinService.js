@@ -4,19 +4,24 @@ import { CoinValidator } from "../coin-collection-validation/CoinValidator";
 
 export class CoinService {
   constructor(repo) {
-    this.coinCollectionRepo = repo;
+    this.#repo = repo;
   }
-
+  #repo;
   async getCoinByStateName(stateName) {
     CoinValidator.validateStateName(stateName);
-    const entity = await this.coinCollectionRepo.getCoinByStateName(stateName);
-    return CoinDTO.fromEntity(entity);
+    const cleanName = stateName.toLowerCase().replace(/\s+/g, "");
+    const data = await this.#repo.getCoinByStateName(cleanName);
+    const entity = CoinEntity.from(data);
+    return CoinDTO.from(entity.toJSON());
   }
 
   async postAllStateCoins(dtos) {
-    dtos.map((dto) => CoinValidator.validateCoinData(dto));
-    const coinDTOs = dtos.map((dto) => CoinDTO.fromDTO(dto));
-    const coinEntities = coinDTOs.map((dto) => CoinEntity.fromDto(dto));
-    return await this.coinCollectionRepo.saveAll(coinEntities);
+    dtos.forEach((dto) => CoinValidator.validateCoinData(dto));
+    const coinDTOs = dtos.map((dto) => CoinDTO.fromNumista(dto));
+    const coinEntities = coinDTOs.map((dto) => CoinEntity.from(dto.toJSON()));
+    await Promise.all(
+      coinEntities.map((entity) => this.#repo.putCoinIntoStorage(entity)),
+    );
+    return coinEntities.map((e) => e.id);
   }
 }

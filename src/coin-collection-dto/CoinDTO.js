@@ -12,49 +12,31 @@ export class CoinDTO {
     this.#mintYear = data.mintYear;
   }
 
-  get id() {
-    return this.#id;
-  }
-  get stateName() {
-    return this.#stateName;
-  }
-  get obvThumb() {
-    return this.#obvThumb;
-  }
-  get revThumb() {
-    return this.#revThumb;
-  }
-  get mintYear() {
-    return this.#mintYear;
-  }
 
   toJSON() {
     return {
-      id: this.id,
-      stateName: this.stateName,
-      obvThumb: this.obvThumb,
-      revThumb: this.revThumb,
-      mintYear: this.mintYear,
+      id: this.#id,
+      stateName: this.#stateName,
+      obvThumb: this.#obvThumb,
+      revThumb: this.#revThumb,
+      mintYear: this.#mintYear,
     };
   }
 
-  static fromEntity(entity) {
-    return new CoinDTO({
-      id: entity.id,
-      stateName: entity.stateName,
-      obvThumb: entity.obvThumb,
-      revThumb: entity.revThumb,
-      mintYear: entity.mintYear,
-    });
+  static from(entity) {
+    return new CoinDTO(entity);
   }
 
-  static fromDTO(dto) {
+  static fromNumista(numista) {
     return new CoinDTO({
-      id: dto.id,
-      stateName: dto.title.match(/\(([^)]+)\)/)?.[1],
-      obvThumb: dto.obverse_thumbnail,
-      revThumb: dto.reverse_thumbnail,
-      mintYear: dto.min_year,
+      id: numista.id,
+      stateName: numista.title
+      .match(/\(([^)]+)\)/)[1]
+      .toLowerCase()
+      .replace(/\s+/g, ""),
+      obvThumb: numista.obverse_thumbnail,
+      revThumb: numista.reverse_thumbnail,
+      mintYear: numista.min_year,
     });
   }
 }

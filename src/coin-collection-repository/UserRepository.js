@@ -1,6 +1,6 @@
 import { OORTStorageClient } from "./OORTStorageClient";
 
-export class UserRepo {
+export class UserRepository {
   constructor(accessKey, secretKey, bucket, user) {
     this.oort = new OORTStorageClient(accessKey, secretKey, bucket);
   }

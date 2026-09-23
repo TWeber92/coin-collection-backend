@@ -2,8 +2,8 @@ import { AuthController } from "./coin-collection-controller/AuthController";
 import { CoinController } from "./coin-collection-controller/CoinController";
 import { UserController } from "./coin-collection-controller/UserController";
 import { AuthRepository } from "./coin-collection-repository/AuthRepository";
-import { CoinCollectionRepo } from "./coin-collection-repository/CoinCollectionRepo";
-import { UserRepo } from "./coin-collection-repository/UserRepo";
+import { CoinRepository } from "./coin-collection-repository/CoinRepository";
+import { UserRepository } from "./coin-collection-repository/UserRepository";
 import { AuthService } from "./coin-collection-service/AuthService";
 // import { OORTStorageClient } from "./coin-collection-repository/OORTStorageClient";
 import { CoinService } from "./coin-collection-service/CoinService";
@@ -20,15 +20,15 @@ export class Main {
     this.instantiateControllers();
   }
 
-  getRepo() {
-    return new CoinCollectionRepo(
+  getCoinRepo() {
+    return new CoinRepository(
       this.config.accessKey,
       this.config.secretKey,
       this.config.bucket,
     );
   }
   getUserRepo() {
-    return new UserRepo(
+    return new UserRepository(
       this.config.accessKey,
       this.config.secretKey,
       this.config.bucket,
@@ -42,8 +42,8 @@ export class Main {
     );
   }
 
-  getService() {
-    return new CoinService(this.getRepo());
+  getCoinService() {
+    return new CoinService(this.getCoinRepo());
   }
   getUserService() {
     return new UserService(this.getUserRepo());
@@ -58,12 +58,12 @@ export class Main {
   getUserController() {
     return new UserController(this.getUserService());
   }
-  getController() {
-    return new CoinController(this.getService());
+  getCoinController() {
+    return new CoinController(this.getCoinService());
   }
 
   instantiateControllers() {
-    this.controller = this.getController();
+    this.controller = this.getCoinController();
     this.userController = this.getUserController();
     this.authController = this.getAuthController();
   }

@@ -6,7 +6,6 @@ export class CoinValidator {
     if (!extracted) {
       throw new ValidationError(stateName, `Expected "(StateName)" pattern`);
     }
-    return extracted;
   }
   static validateCoinData(coin) {
     const errors = [];
@@ -40,13 +39,5 @@ export class CoinValidator {
         `Validation failed: ${errors.join(", ")}`,
       );
     }
-
-    return {
-      id: coin.id,
-      stateName,
-      obvThumb: coin.obverse_thumbnail,
-      revThumb: coin.reverse_thumbnail,
-      mintYear,
-    };
   }
 }

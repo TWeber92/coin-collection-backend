@@ -12,22 +12,6 @@ export class CoinEntity {
     this.#mintYear = data.mintYear;
   }
 
-  get id() {
-    return this.#id;
-  }
-  get stateName() {
-    return this.#stateName;
-  }
-  get obvThumb() {
-    return this.#obvThumb;
-  }
-  get revThumb() {
-    return this.#revThumb;
-  }
-  get mintYear() {
-    return this.#mintYear;
-  }
-
   toJSON() {
     return {
       id: this.#id,
@@ -37,13 +21,7 @@ export class CoinEntity {
       mintYear: this.#mintYear,
     };
   }
-  static fromDto(dto) {
-    return new CoinEntity({
-      id: dto.id,
-      stateName: dto.stateName,
-      obvThumb: dto.obvThumb,
-      revThumb: dto.revThumb,
-      mintYear: dto.mintYear,
-    });
+  static from(dto) {
+    return new CoinEntity(dto);
   }
 }
