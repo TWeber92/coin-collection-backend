@@ -2,6 +2,7 @@ import { handler as getCoin } from "./getCoin.js";
 import { handler as postAll } from "./postAll.js";
 import { handler as getUser } from "./getUser.js";
 import { handler as postUser } from "./postUser.js";
+import { handler as putUser } from "./putUser.js";
 import { handler as putCollection } from "./putUserCollection.js";
 
 export default {
@@ -33,6 +34,7 @@ export default {
       "GET:/api/coin": async () => await getCoin(event, env),
       "POST:/api/login": async () => await getUser(event, env),
       "POST:/api/signup": async () => await postUser(event, env),
+      "POST:/api/logout": async () => await putUser(event, env),
       "POST:/api/coins": async () => await postAll(event, env),
       "PUT:/api/user/collection": async () => await putCollection(event, env),
     };

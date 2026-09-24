@@ -43,4 +43,13 @@ export class UserController extends APIController {
       return { status: 200, data: { uuid, email } };
     });
   }
+  async logout(req, res) {
+  return super.POST(req, res, "logout", async () => {
+    res.setHeader(
+      "Set-Cookie",
+      "auth=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0",
+    );
+    return { status: 200, data: { message: "Logged out" } };
+  });
+}
 }
