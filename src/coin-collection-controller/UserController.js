@@ -27,4 +27,20 @@ export class UserController extends APIController {
       return { status: 201, data: { uuid, email } };
     });
   }
+  async login(req, res) {
+    return super.POST(req, res, "login", async () => {
+      const { uuid, email } = await this.#userService.login(
+        req.body.email,
+        req.body.password,
+      );
+      const session = await encrypt(uuid, this.#serverKey);
+
+      res.setHeader(
+        "Set-Cookie",
+        `auth=${session}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=604800`,
+      );
+
+      return { status: 200, data: { uuid, email } };
+    });
+  }
 }

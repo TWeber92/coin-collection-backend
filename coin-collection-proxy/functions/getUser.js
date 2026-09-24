@@ -1,46 +1,38 @@
-import { getHMAC, encrypt } from "../../src/coin-collection-auth/session";
 import { Main } from "../../src/Main";
 
 export const handler = async (event, env) => {
   let responseStatus = 200;
   let responseBody;
+  let responseHeaders = { "Content-Type": "application/json" };
+
   const main = new Main(env);
-  const authController = main.authController;
-  const userController = main.userController;
-  const { email, password } = JSON.parse(event.body);
-  const lookupKey = await getHMAC(email, password, env.SERVER_KEY);
-  const payload = JSON.stringify({
-    lookupKey,
-    exp: Date.now() + 86400000,
-  });
-  const authToken = await encrypt(payload, env.SERVER_KEY);
+  const controller = main.userController;
+
   const req = {
-    body: JSON.stringify({ email, lookupKey }),
-    method: event.httpMethod,
+    body: JSON.parse(event.body || "{}"),
     path: event.path,
+    method: event.httpMethod,
   };
+
   const res = {
     status: (code) => {
       responseStatus = code;
       return {
         json: (data) => {
-          responseBody = data;
+          responseBody = JSON.stringify(data);
         },
       };
     },
+    setHeader: (name, value) => {
+      responseHeaders[name] = value;
+    },
   };
-  await authController.getAuthDataByKey(req, res);
 
-  const body = JSON.parse(req.body);
-  req.body = JSON.stringify({ ...body, id: responseBody.id });
-  await userController.getUserById(req, res);
+  await controller.login(req, res);
 
   return {
     statusCode: responseStatus,
-    headers: {
-      "Content-Type": "application/json",
-      "Set-Cookie": `auth=${authToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`,
-    },
-    body: JSON.stringify(responseBody),
+    headers: responseHeaders,
+    body: responseBody,
   };
 };
