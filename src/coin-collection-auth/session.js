@@ -1,7 +1,7 @@
 import {
   AuthenticationError,
   CoinCollectionError,
-} from "../../src/coin-collection-exception/CoinCollectionError";
+} from "../coin-collection-exception/CoinCollectionError";
 
 export async function getHMAC(email, password, SERVER_KEY) {
   return handleAuthentication(async () => {
@@ -53,7 +53,7 @@ export async function decrypt(cookie, SERVER_KEY) {
     if (!match)
       throw new AuthenticationError(
         "Cookie does not exist, or no match found",
-        "auth.js/decrypt",
+        "session.js/decrypt",
       );
     const token = match[1];
     const [ivHex, cipherHex] = token.split(".");
@@ -80,6 +80,6 @@ export async function handleAuthentication(fn) {
   } catch (error) {
     throw error instanceof CoinCollectionError
       ? error
-      : new AuthenticationError(error.message, "auth.js/decrypt");
+      : new AuthenticationError(error.message, "session.js/decrypt");
   }
 }

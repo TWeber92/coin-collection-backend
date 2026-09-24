@@ -45,28 +45,44 @@ export class OORTStorageClient {
     const result = await this.OORT(command);
     return { ...result, key };
   }
-  // async getFolderContents(prefix){
-  //   const command = new ListObjectsV2Command({
-  //     Bucket: this.bucket,
-  //     Prefix: prefix
-  //   })
-  //   return await this.OORT(command).Contents || {}
-  // }
+  async putObjectIfAbsent(key, dataObject) {
+    const command = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+      Body: JSON.stringify(dataObject),
+      ContentType: "application/json",
+      IfNoneMatch: "*",
+    });
+    return await this.OORT(command);
+  }
   async OORT(command) {
     try {
       const res = await this.client.send(command);
       return res;
     } catch (error) {
-      const parser = new XMLParser();
-      const parsed = parser.parse(error.$responseBodyText);
       const operation = command.constructor.name;
-      const key = parsed.Error.Key;
-      const message = this.#getFriendlyMessage(
-        parsed.Error.Code,
-        operation,
-        key,
-      );
-      throw new OortError(message, parsed.Error);
+      const code = error.Code;
+      const key = error.Key;
+      const status = error.$metadata?.httpStatusCode;
+      if (code) {
+        const message = this.#getFriendlyMessage(code, operation, key);
+        console.log(message);
+        
+        throw new OortError(message, error, code, status);
+      }
+      if (error.$responseBodyText) {
+        const parser = new XMLParser();
+        const parsed = parser.parse(error.$responseBodyText);
+        const parsedCode = parsed?.Error?.Code;
+        const parsedKey = parsed?.Error?.Key;
+        const message = this.#getFriendlyMessage(
+          parsedCode,
+          operation,
+          parsedKey,
+        );
+        throw new OortError(message, parsed.Error, parsedCode, status);
+      }
+      throw new OortError(`${operation} failed: ${error.message}`, error, status);
     }
   }
   #getFriendlyMessage(code, operation, key) {
@@ -76,7 +92,8 @@ export class OORTStorageClient {
       NoSuchBucket: "Storage bucket not found",
       SlowDown: "Too many requests, please try again later",
       NoSuchObjectStat: `Object path: ${key} does not exist`,
+      PreconditionFailed: `Resource "${key}" already exists`,
     };
-    return `${operation}: ${map[code]}` || `${operation} failed for "${key}"`;
+    return `${operation}: ${map[code] || `failed for "${key}"`}`;
   }
 }

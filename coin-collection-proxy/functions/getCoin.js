@@ -31,4 +31,3 @@ export const handler = async (event, env) => {
     body: responseBody,
   };
 };
-function handleReturn() {}

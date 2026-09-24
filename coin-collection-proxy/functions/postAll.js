@@ -3,7 +3,7 @@ import {
   AuthorizationError,
 } from "../../src/coin-collection-exception/CoinCollectionError";
 import { Main } from "../../src/Main";
-import { decrypt } from "./auth";
+import { decrypt } from "../../src/coin-collection-auth/session";
 
 export const handler = async (event, env) => {
   let responseStatus = 200;

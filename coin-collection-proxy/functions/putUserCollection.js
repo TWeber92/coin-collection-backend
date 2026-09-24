@@ -1,4 +1,4 @@
-import { decrypt } from "./auth";
+import { decrypt } from "../../src/coin-collection-auth/session";
 import { Main } from "../../src/Main";
 import { AuthenticationError } from "../../src/coin-collection-exception/CoinCollectionError";
 

@@ -7,18 +7,31 @@ export class UserValidator {
     if (!uuidRegex.test(userId)) {
       throw new ValidationError("userId", "Invalid UUID format");
     }
-    return true;
   }
   static validateUserData(user) {
-    this.errors = [];
+    const errors = [];
     const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-    if (!emailRegex.test(user.email)) this.errors.push("Invalid Email Format");
+    if (!emailRegex.test(user.email)) errors.push("Invalid Email Format");
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(user.id)) this.errors.push("Invalid User ID format");
-    if (this.errors.length > 0) {
-      throw new ValidationError("userData", this.errors.join(", "));
+    if (!uuidRegex.test(user.id)) errors.push("Invalid User ID format");
+    if (errors.length > 0) {
+      throw new ValidationError("userData", errors.join(", "));
     }
-    return true;
   }
+  static validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    throw new ValidationError("email", "Invalid email format");
+  }
+}
+
+static validatePassword(password) {
+  if (!password || typeof password !== "string") {
+    throw new ValidationError("password", "Password is required");
+  }
+  if (password.length < 8) {
+    throw new ValidationError("password", "Password must be at least 8 characters");
+  }
+}
 }

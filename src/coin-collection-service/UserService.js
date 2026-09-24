@@ -1,32 +1,22 @@
-import { UserDTO } from "../coin-collection-dto/UserDTO";
-import { UserEntity } from "../coin-collection-entity/UserEntity";
-import {
-  AuthenticationError,
-  NotFoundError,
-} from "../coin-collection-exception/CoinCollectionError";
-import { UserValidator } from "../coin-collection-validation/UserValidator";
+import { UserValidator } from "../coin-collection-validation/UserValidator.js";
+import { hashPassword } from "../coin-collection-auth/password.js";
 
 export class UserService {
-  #userRepo;
-  constructor(userRepo) {
-    this.#userRepo = userRepo;
+  #repo;
+
+  constructor(repo) {
+    this.#repo = repo;
   }
-  async getUserById({ id }) {
-    UserValidator.validateUserId(id);
-    const entity = await this.#userRepo.getUserById(id);
-    return UserDTO.fromEntity(entity);
-  }
-  async postUserData(userDTO) {
-    UserValidator.validateUserData(userDTO);
-    const dto = UserDTO.fromDTO(userDTO);
-    await this.#userRepo.postUserData(UserEntity.fromDTO(dto));
-    const entity = await this.getUserById(dto.id);
-    return UserDTO.fromEntity(entity);
-  }
-  async updateUserData({ collection, id }) {
-    const entity = await this.getUserById(id);
-    const user = UserDTO.fromEntity(entity);
-    user.collection = collection;
-    await this.#userRepo.updateUserData(UserEntity.fromDTO(user));
+
+  async signup(email, password) {
+    const cleanEmail = email.toLowerCase().trim();
+
+    UserValidator.validateEmail(cleanEmail);
+    UserValidator.validatePassword(password);
+
+    const passwordHash = await hashPassword(password);
+    const uuid = await this.#repo.createUser(cleanEmail, passwordHash);
+
+    return { uuid, email: cleanEmail };
   }
 }

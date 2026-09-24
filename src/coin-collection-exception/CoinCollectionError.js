@@ -59,14 +59,23 @@ export class AuthorizationError extends CoinCollectionError {
   }
 }
 export class OortError extends CoinCollectionError {
-  constructor(message, originalError) {
+  constructor(message, originalError, code, status) {
     super(
       `OORT operation failed: ${message}`,
-      "OortError",
-      {
-        originalError: originalError?.Message,
-      },
-      500,
+      code,
+      { originalError: originalError.Resource },
+      status,
+    );
+    this.code = code
+  }
+}
+export class ConflictError extends CoinCollectionError {
+  constructor(resource, context) {
+    super(
+      `${resource} already exists`,
+      "ConflictError",
+      context,
+      409,
     );
   }
 }

@@ -1,4 +1,4 @@
-import { getHMAC, encrypt } from "./auth";
+import { getHMAC, encrypt } from "../../src/coin-collection-auth/session";
 import { Main } from "../../src/Main";
 
 export const handler = async (event, env) => {

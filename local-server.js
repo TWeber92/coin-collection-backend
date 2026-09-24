@@ -6,6 +6,7 @@ const env = {
   OORT_ACCESS_KEY: process.env.OORT_ACCESS_KEY,
   OORT_SECRET_KEY: process.env.OORT_SECRET_KEY,
   OORT_BUCKET: process.env.OORT_BUCKET,
+  SERVER_KEY: process.env.SERVER_KEY,
 };
 
 const PORT = 3000;

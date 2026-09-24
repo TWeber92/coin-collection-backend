@@ -31,7 +31,7 @@ export class UserDTO {
       permissions: entity.permissions,
     });
   }
-  static fromDTO(dto) {
+  static fromCoinApp(dto) {
     return new UserDTO({
       id: dto.sub,
       email: dto.email.toLowerCase().replace(/[^a-z0-9@.-]/g, ""),
