@@ -8,27 +8,24 @@ export class UserRepository {
   }
 
   async createUser(email, passwordHash) {
-  const uuid = crypto.randomUUID();
-  const indexKey = `email-index/${email}.json`;
-  const userKey = `users/${uuid}.json`;
-
-  try {
-    const exists = await this.#oort.getObject(indexKey);
-    if(exists) throw new ConflictError("User", { email });
-  } catch (error) {
-    if (error.code !== "NoSuchObjectStat") throw error;
-
-    await this.#oort.putObject(indexKey, { uuid });
-    await this.#oort.putObject(userKey, {
-      uuid,
-      email,
-      passwordHash,
-      createdAt: new Date().toISOString(),
-    });
+    const uuid = crypto.randomUUID();
+    const indexKey = `email-index/${email}.json`;
+    const userKey = `users/${uuid}.json`;
+    try {
+      const exists = await this.#oort.getObject(indexKey);
+      if (exists) throw new ConflictError("User", { email });
+    } catch (error) {
+      if (error.code !== "NoSuchObjectStat") throw error;
+      await this.#oort.putObject(indexKey, { uuid });
+      await this.#oort.putObject(userKey, {
+        uuid,
+        email,
+        passwordHash,
+        createdAt: new Date().toISOString(),
+      });
+    }
+    return uuid;
   }
-
-  return uuid;
-}
 
   async getUserByEmail(email) {
     const indexKey = `email-index/${email}.json`;
