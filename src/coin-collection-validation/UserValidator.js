@@ -25,6 +25,11 @@ export class UserValidator {
     throw new ValidationError("email", "Invalid email format");
   }
 }
+static validatePasswordPresent(password) {
+  if (!password || typeof password !== "string") {
+    throw new ValidationError("password", "Password is required");
+  }
+}
 
 static validatePassword(password) {
   if (!password || typeof password !== "string") {

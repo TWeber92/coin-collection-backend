@@ -28,11 +28,16 @@ export class UserRepository {
   }
 
   async getUserByEmail(email) {
-    const indexKey = `email-index/${email}.json`;
-    const index = await this.#oort.getObject(indexKey);
-    const userKey = `users/${index.uuid}.json`;
-    return await this.#oort.getObject(userKey);
+  const indexKey = `email-index/${email}.json`;
+  let index;
+  try {
+    index = await this.#oort.getObject(indexKey);
+  } catch (err) {
+    if (err.code === "NoSuchObjectStat") return null;   // email not found
+    throw err;                                          // real error
   }
+  return await this.#oort.getObject(`users/${index.uuid}.json`);
+}
 
   async getUserByUuid(uuid) {
     const userKey = `users/${uuid}.json`;

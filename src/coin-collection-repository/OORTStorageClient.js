@@ -66,8 +66,6 @@ export class OORTStorageClient {
       const status = error.$metadata?.httpStatusCode;
       if (code) {
         const message = this.#getFriendlyMessage(code, operation, key);
-        console.log(message);
-        
         throw new OortError(message, error, code, status);
       }
       if (error.$responseBodyText) {
