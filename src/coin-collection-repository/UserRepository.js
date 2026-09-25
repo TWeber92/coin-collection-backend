@@ -32,9 +32,9 @@ export class UserRepository {
   let index;
   try {
     index = await this.#oort.getObject(indexKey);
-  } catch (err) {
-    if (err.code === "NoSuchObjectStat") return null;   // email not found
-    throw err;                                          // real error
+  } catch (error) {
+    if (error.code === "NoSuchObjectStat") return null;   // email not found
+    throw error;                                          // real error
   }
   return await this.#oort.getObject(`users/${index.uuid}.json`);
 }
@@ -43,4 +43,8 @@ export class UserRepository {
     const userKey = `users/${uuid}.json`;
     return await this.#oort.getObject(userKey);
   }
+  async putTempPin(email, record) {
+  const key = `temp-pin/${email}.json`;
+  await this.#oort.putObject(key, record);
+}
 }

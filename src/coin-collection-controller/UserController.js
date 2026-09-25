@@ -1,5 +1,5 @@
 import { APIController } from "./APIController";
-import { encrypt } from "../coin-collection-auth/session.js";
+import { decrypt, encrypt } from "../coin-collection-auth/session.js";
 
 export class UserController extends APIController {
   #userService;
@@ -44,12 +44,35 @@ export class UserController extends APIController {
     });
   }
   async logout(req, res) {
-  return super.POST(req, res, "logout", async () => {
-    res.setHeader(
-      "Set-Cookie",
-      "auth=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0",
-    );
-    return { status: 200, data: { message: "Logged out" } };
+    return super.POST(req, res, "logout", async () => {
+      res.setHeader(
+        "Set-Cookie",
+        "auth=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0",
+      );
+      return { status: 200, data: { message: "Logged out" } };
+    });
+  }
+  async getMe(req, res) {
+    return super.GET(req, res, "getMe", async () => {
+      const uuid = await decrypt(req.headers.cookie, this.#serverKey);
+      const user = await this.#userService.getUserByUuid(uuid);
+      return { status: 200, data: { uuid: user.uuid, email: user.email } };
+    });
+  }
+  async getUserByEmail(req, res) {
+    return super.GET(req, res, "getUserByEmail", async () => {
+      const user = await this.#userService.getUserByEmail(req.body.email);
+      return { status: 200, data: user };
+    });
+  }
+  async putTempPin(req, res) {
+  return super.POST(req, res, "putPin", async () => {
+    const { email, pin } = req.body;
+    await this.#userService.putTempPin(email, pin);
+    return {
+      status: 200,
+      data: { message: "If that email is registered, a PIN has been sent." },
+    };
   });
 }
 }

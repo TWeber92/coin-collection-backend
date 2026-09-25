@@ -1,5 +1,8 @@
 import { UserValidator } from "../coin-collection-validation/UserValidator.js";
-import { hashPassword, verifyPassword } from "../coin-collection-auth/password.js";
+import {
+  hashPassword,
+  verifyPassword,
+} from "../coin-collection-auth/password.js";
 import { AuthenticationError } from "../coin-collection-exception/CoinCollectionError.js";
 
 export class UserService {
@@ -21,7 +24,7 @@ export class UserService {
     return { uuid, email: cleanEmail };
   }
 
-   async login(email, password) {
+  async login(email, password) {
     const cleanEmail = email.toLowerCase().trim();
 
     UserValidator.validateEmail(cleanEmail);
@@ -39,4 +42,26 @@ export class UserService {
 
     return { uuid: user.uuid, email: user.email };
   }
+  async getUserByUuid(uuid) {
+    return await this.#repo.getUserByUuid(uuid);
+  }
+  async getUserByEmail(email) {
+    const cleanEmail = email.toLowerCase().trim();
+    UserValidator.validateEmail(cleanEmail);
+    const user = await this.#repo.getUserByEmail(cleanEmail);
+    if (!user) {
+      throw new AuthenticationError("Invalid credentials", "login");
+    }
+    return user;
+  }
+  async putTempPin(email, pin) {
+  const cleanEmail = email.toLowerCase().trim();
+  const pinHash = await hashPassword(pin);
+  const expiresAt = Date.now() + 15 * 60 * 1000;
+  await this.#repo.putTempPin(cleanEmail, {
+    pinHash,
+    expiresAt,
+    attempts: 0,
+  });
+}
 }

@@ -6,9 +6,15 @@ import { ConflictError } from "../src/coin-collection-exception/CoinCollectionEr
 test("createUser writes index and user record", async () => {
   const stored = new Map();
   const fakeOort = {
-    putObjectIfAbsent: async (key, obj) => { stored.set(key, obj); return { key }; },
-    putObject: async (key, obj) => { stored.set(key, obj); return { key }; },
-    getObject: async (key) => stored.get(key),
+    getObject: async (key) => {
+      const err = new Error("missing");
+      err.code = "NoSuchObjectStat";
+      throw err;
+    },
+    putObject: async (key, obj) => {
+      stored.set(key, obj);
+      return { key };
+    },
   };
 
   const repo = new UserRepository(fakeOort);
@@ -21,13 +27,8 @@ test("createUser writes index and user record", async () => {
 
 test("createUser throws ConflictError when email taken", async () => {
   const fakeOort = {
-    putObjectIfAbsent: async () => {
-      const err = new Error("exists");
-      err.code = "PreconditionFailed";
-      throw err;
-    },
+    getObject: async () => ({ uuid: "existing-uuid" }),   // ← returns an object → email exists
     putObject: async () => ({}),
-    getObject: async () => ({}),
   };
 
   const repo = new UserRepository(fakeOort);

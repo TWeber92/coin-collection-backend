@@ -7,6 +7,8 @@ const env = {
   OORT_SECRET_KEY: process.env.OORT_SECRET_KEY,
   OORT_BUCKET: process.env.OORT_BUCKET,
   SERVER_KEY: process.env.SERVER_KEY,
+  EMAIL_ADMIN: process.env.EMAIL_ADMIN,
+  EMAIL_PASS: process.env.EMAIL_PASS,
 };
 
 const PORT = 3000;

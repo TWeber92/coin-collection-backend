@@ -49,12 +49,19 @@ export async function encrypt(plaintext, SERVER_KEY) {
 }
 export async function decrypt(cookie, SERVER_KEY) {
   return handleAuthentication(async () => {
-    const match = cookie.match(/auth=([^;]+)/);
-    if (!match)
+    if (!cookie) {
       throw new AuthenticationError(
-        "Cookie does not exist, or no match found",
+        "No auth cookie present",
         "session.js/decrypt",
       );
+    }
+    const match = cookie.match(/auth=([^;]+)/);
+    if (!match) {
+      throw new AuthenticationError(
+        "Cookie does not contain auth token",
+        "session.js/decrypt",
+      );
+    }
     const token = match[1];
     const [ivHex, cipherHex] = token.split(".");
     const key = await crypto.subtle.importKey(

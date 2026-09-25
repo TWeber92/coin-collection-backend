@@ -1,5 +1,7 @@
 import { handler as getCoin } from "./getCoin.js";
 import { handler as postAll } from "./postAll.js";
+import { handler as getMe } from "./getMe.js";
+import { handler as getPin } from "./getPin.js";
 import { handler as getUser } from "./getUser.js";
 import { handler as postUser } from "./postUser.js";
 import { handler as putUser } from "./putUser.js";
@@ -27,6 +29,7 @@ export default {
     const event = {
       path: url.pathname,
       httpMethod: request.method,
+      headers: Object.fromEntries(request.headers),
       queryStringParameters: Object.fromEntries(url.searchParams),
       body: request.method === "POST" ? await request.text() : null,
     };
@@ -35,6 +38,8 @@ export default {
       "POST:/api/login": async () => await getUser(event, env),
       "POST:/api/signup": async () => await postUser(event, env),
       "POST:/api/logout": async () => await putUser(event, env),
+      "GET:/api/me": async () => await getMe(event, env),
+      "POST:/api/pin": async () => await getPin(event, env),
       "POST:/api/coins": async () => await postAll(event, env),
       "PUT:/api/user/collection": async () => await putCollection(event, env),
     };
