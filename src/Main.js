@@ -8,7 +8,6 @@ import { UserService } from "./coin-collection-service/UserService";
 
 export class Main {
   constructor(env) {
-  console.log("SERVER_KEY present:", !!env.SERVER_KEY);
     this.#oort = new OORTStorageClient(
       env.OORT_ACCESS_KEY,
       env.OORT_SECRET_KEY,
@@ -25,9 +24,6 @@ export class Main {
   #getUserRepo() {
     return new UserRepository(this.#oort);
   }
-  #getAuthRepo() {
-    return new AuthRepository(this.#oort);
-  }
 
   #getCoinService() {
     return new CoinService(this.#getCoinRepo());
@@ -35,13 +31,7 @@ export class Main {
   #getUserService() {
     return new UserService(this.#getUserRepo());
   }
-  #getAuthService() {
-    return new AuthService(this.#getAuthRepo());
-  }
-
-  #getAuthController() {
-    return new AuthController(this.#getAuthService());
-  }
+  
   #getUserController() {
     return new UserController(this.#getUserService(), this.#serverKey);
   }
@@ -52,6 +42,5 @@ export class Main {
   instantiateControllers() {
     this.coinController = this.#getCoinController();
     this.userController = this.#getUserController();
-    this.authController = this.#getAuthController();
   }
 }
