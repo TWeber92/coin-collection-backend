@@ -53,14 +53,6 @@ export class UserService {
     return UserDTO.from(entity.toJSON());
   }
 
-  async getUserByEmail(email) {
-    const cleanEmail = email.toLowerCase().trim();
-    UserValidator.validateEmail(cleanEmail);
-    const user = await this.#repo.getUserByEmail(cleanEmail);
-    if (!user) throw new AuthenticationError("Invalid credentials", "Email");
-    const entity = User.from(user);
-    return UserDTO.from(entity.toJSON());
-  }
   async getEmailIndex(email) {
     const cleanEmail = email.toLowerCase().trim();
     UserValidator.validateEmail(cleanEmail);
