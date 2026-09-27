@@ -1,10 +1,7 @@
-import { AuthController } from "./coin-collection-controller/AuthController";
 import { CoinController } from "./coin-collection-controller/CoinController";
 import { UserController } from "./coin-collection-controller/UserController";
-import { AuthRepository } from "./coin-collection-repository/AuthRepository";
 import { CoinRepository } from "./coin-collection-repository/CoinRepository";
 import { UserRepository } from "./coin-collection-repository/UserRepository";
-import { AuthService } from "./coin-collection-service/AuthService";
 import { OORTStorageClient } from "./coin-collection-repository/OORTStorageClient";
 import { CoinService } from "./coin-collection-service/CoinService";
 import { UserService } from "./coin-collection-service/UserService";
