@@ -26,7 +26,8 @@ export async function sendEmail(to, pin, env) {
       });
     } else {
       // Local Development: Use nodemailer (Node.js)
-      const nodemailer = await import('nodemailer');
+      const nodemailerPath = "nodemailer";
+      const nodemailer = await import(nodemailerPath);
       const transporter = nodemailer.default.createTransport({
         host: 'smtp.gmail.com',
         port: 587,

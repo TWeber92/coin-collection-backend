@@ -5,6 +5,7 @@ import { handler as getPin } from "./getPin.js";
 import { handler as getUser } from "./getUser.js";
 import { handler as postUser } from "./postUser.js";
 import { handler as putUser } from "./putUser.js";
+import { handler as putPassword } from "./putPassword.js";
 import { handler as putCollection } from "./putUserCollection.js";
 
 export default {
@@ -17,7 +18,7 @@ export default {
     const allowOrigin = ALLOWED.has(origin) ? origin : "null";
     const corsHeaders = {
       "Access-Control-Allow-Origin": allowOrigin,
-      "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
       "Access-Control-Allow-Headers": "Content-Type",
     };
 
@@ -31,7 +32,7 @@ export default {
       httpMethod: request.method,
       headers: Object.fromEntries(request.headers),
       queryStringParameters: Object.fromEntries(url.searchParams),
-      body: request.method === "POST" ? await request.text() : null,
+      body: await request.text()
     };
     const routerMap = {
       "GET:/api/coin": async () => await getCoin(event, env),
@@ -41,6 +42,7 @@ export default {
       "GET:/api/me": async () => await getMe(event, env),
       "POST:/api/pin": async () => await getPin(event, env),
       "POST:/api/coins": async () => await postAll(event, env),
+      "PUT:/api/password": async () => await putPassword(event, env),
       "PUT:/api/user/collection": async () => await putCollection(event, env),
     };
     const router = routerMap[`${request.method}:${url.pathname}`];

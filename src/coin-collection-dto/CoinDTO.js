@@ -12,7 +12,6 @@ export class CoinDTO {
     this.#mintYear = data.mintYear;
   }
 
-
   toJSON() {
     return {
       id: this.#id,

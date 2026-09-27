@@ -1,5 +1,4 @@
 import { Main } from "../../src/Main";
-import { sendEmail } from "./mailer";
 
 export const handler = async (event, env) => {
   let responseStatus = 200;
@@ -29,14 +28,9 @@ export const handler = async (event, env) => {
       responseHeaders[name] = value;
     },
   };
-
-  await controller.getEmailIndex(req, res)
-  const index = JSON.parse(responseBody)
-  req.body.index = index
-  const pin = generatePin();
-  await sendEmail(req.body.email, pin, env);
-  req.body.pin = pin;
-  await controller.putTempPin(req, res);
+  console.log(req);
+  
+  await controller.putPassword(req, res);
 
   return {
     statusCode: responseStatus,
@@ -44,9 +38,3 @@ export const handler = async (event, env) => {
     body: responseBody,
   };
 };
-
-function generatePin() {
-  const array = new Uint32Array(1);
-  crypto.getRandomValues(array);
-  return (100000 + (array[0] % 900000)).toString();
-}

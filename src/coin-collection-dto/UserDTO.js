@@ -1,43 +1,35 @@
+import { CollectionDTO } from "./CollectionDTO";
+import { PinDTO } from "./PinDTO";
+
 export class UserDTO {
   #id;
   #email;
+  #pin;
+  #createdAt;
   #collection;
-  #roles;
-  #permissions;
   constructor(data) {
     this.#id = data.id;
     this.#email = data.email;
-    this.#collection = data.collection;
-    this.#roles = data.roles;
-    this.#permissions = data.permissions;
+    this.#createdAt = data.createdAt;
+    this.#pin = PinDTO.from(data);
+    this.#collection = CollectionDTO.from(data.collection);
+  }
+  get createdAt() {
+    return this.#createdAt;
+  }
+  get pin() {
+    return this.#pin
   }
 
   toJSON() {
     return {
       id: this.#id,
       email: this.#email,
-      collection: this.#collection,
-      roles: this.#roles,
-      permissions: this.#permissions,
+      pin: this.#pin.toJSON(),
+      collection: this.#collection.toJSON(),
     };
   }
-
-  static fromEntity(entity) {
-    return new UserDTO({
-      id: entity.id,
-      email: entity.email,
-      collection: entity.collection,
-      roles: entity.roles,
-      permissions: entity.permissions,
-    });
-  }
-  static fromCoinApp(dto) {
-    return new UserDTO({
-      id: dto.sub,
-      email: dto.email.toLowerCase().replace(/[^a-z0-9@.-]/g, ""),
-      collection: dto.collection,
-      roles: ["user"],
-      permissions: ["read:getcoin, read:getuser"],
-    });
+  static from(data) {
+    return new UserDTO(data);
   }
 }

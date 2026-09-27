@@ -7,8 +7,14 @@ export class UserRepository {
     this.#oort = oort;
   }
 
-  async createUser(email, passwordHash) {
-    const uuid = crypto.randomUUID();
+  async getUserByUuid(uuid) {
+    const userKey = `users/${uuid}.json`;
+    return await this.#oort.getObject(userKey);
+  }
+
+  async createUser(entity) {
+    const email = entity.toJSON().email;
+    const uuid = entity.toJSON().id;
     const indexKey = `email-index/${email}.json`;
     const userKey = `users/${uuid}.json`;
     try {
@@ -17,34 +23,35 @@ export class UserRepository {
     } catch (error) {
       if (error.code !== "NoSuchObjectStat") throw error;
       await this.#oort.putObject(indexKey, { uuid });
-      await this.#oort.putObject(userKey, {
-        uuid,
-        email,
-        passwordHash,
-        createdAt: new Date().toISOString(),
-      });
+      await this.#oort.putObject(userKey, entity);
     }
-    return uuid;
   }
-
   async getUserByEmail(email) {
-  const indexKey = `email-index/${email}.json`;
-  let index;
-  try {
-    index = await this.#oort.getObject(indexKey);
-  } catch (error) {
-    if (error.code === "NoSuchObjectStat") return null;   // email not found
-    throw error;                                          // real error
-  }
-  return await this.#oort.getObject(`users/${index.uuid}.json`);
-}
-
-  async getUserByUuid(uuid) {
-    const userKey = `users/${uuid}.json`;
+    let index;
+    const indexKey = `email-index/${email}.json`;
+    try {
+      index = await this.#oort.getObject(indexKey);
+    } catch (error) {
+      if (error.code === "NoSuchObjectStat") return null; // email not found
+      throw error; // real error
+    }
+    const userKey = `users/${index.uuid}.json`;
     return await this.#oort.getObject(userKey);
   }
-  async putTempPin(email, record) {
-  const key = `temp-pin/${email}.json`;
-  await this.#oort.putObject(key, record);
-}
+  async getEmailIndex(email) {
+    let index;
+    const indexKey = `email-index/${email}.json`;
+    try {
+      index = await this.#oort.getObject(indexKey);
+    } catch (error) {
+      if (error.code === "NoSuchObjectStat") return null;
+      throw error;
+    }
+    return index;
+  }
+  async putUser(entity) {
+    const uuid = entity.toJSON().id;
+    const userKey = `users/${uuid}.json`;
+    await this.#oort.putObject(userKey, entity);
+  }
 }
