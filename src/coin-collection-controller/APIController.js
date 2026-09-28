@@ -26,8 +26,7 @@ export class APIController {
       error = new CoinCollectionError(
         error.message,
         error.name || "UnknownError",
-        error.context,
-        operation,
+        error.context || operation,
         error.status,
       );
     }
