@@ -34,9 +34,11 @@ export const handler = async (event, env) => {
   if (env.PIN_RATE_LIMITER) {
     //weed out local env
     const ip = req.headers["cf-connecting-ip"] || "unknown";
+    const key = `${ip}:${req.path}`;
     console.log("rate limit key:", ip);
-    const { success } = await env.PIN_RATE_LIMITER.limit({ key: ip });
-    console.log(success);
+    const { success, limit, remaining, reset } =
+      await env.PIN_RATE_LIMITER.limit({ key });
+    console.log(success, limit, remaining, reset);
     if (!success)
       throw new RateLimitError("Too many requests. Try again later.");
   }
