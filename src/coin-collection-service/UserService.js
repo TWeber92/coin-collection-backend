@@ -21,12 +21,12 @@ export class UserService {
     return await this.#repo.getUserByUuid(uuid);
   }
 
-  async signup(email, password, collection) {
+  async signup(email, password, collection, pepper) {
     const cleanEmail = email.toLowerCase().trim();
     UserValidator.validateEmail(cleanEmail);
     UserValidator.validatePassword(password);
     const uuid = crypto.randomUUID();
-    const passwordHash = await hashPassword(password);
+    const passwordHash = await hashPassword(password, pepper);
     const entity = User.from({
       id: uuid,
       email: cleanEmail,
@@ -38,14 +38,14 @@ export class UserService {
     await this.#repo.createUser(entity);
     return UserDTO.from(entity.toJSON());
   }
-  async login(email, password) {
+  async login(email, password, pepper) {
     const cleanEmail = email.toLowerCase().trim();
     UserValidator.validateEmail(cleanEmail);
     UserValidator.validatePasswordPresent(password);
     const user = await this.#repo.getUserByEmail(cleanEmail);
     if (!user) throw new AuthenticationError("Invalid credentials", "Email");
     const entity = User.from(user);
-    const ok = await verifyPassword(password, user.passwordHash);
+    const ok = await verifyPassword(password, user.passwordHash, pepper);
     if (!ok) throw new AuthenticationError("Invalid credentials", "Password");
     return UserDTO.from(entity.toJSON());
   }

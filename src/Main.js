@@ -13,11 +13,11 @@ export class Main {
       env.OORT_SECRET_KEY,
       env.OORT_BUCKET,
     )
-    this.#serverKey = env.SERVER_KEY
+    this.#keys = {server:env.SERVER_KEY, pepper: env.PEPPER_KEY} 
     this.instantiateControllers();
   }
   #oort
-  #serverKey
+  #keys
   #getCoinRepo() {
     return new CoinRepository(this.#oort);
   }
@@ -33,7 +33,7 @@ export class Main {
   }
   
   #getUserController() {
-    return new UserController(this.#getUserService(), this.#serverKey);
+    return new UserController(this.#getUserService(), this.#keys);
   }
   #getCoinController() {
     return new CoinController(this.#getCoinService());

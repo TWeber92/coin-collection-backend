@@ -3,12 +3,12 @@ import { decrypt, encrypt } from "../coin-collection-auth/session.js";
 
 export class UserController extends APIController {
   #userService;
-  #serverKey;
+  #keys;
 
-  constructor(service, serverKey) {
+  constructor(service, keys) {
     super();
     this.#userService = service;
-    this.#serverKey = serverKey;
+    this.#keys = keys;
   }
 
   async signup(req, res) {
@@ -17,8 +17,9 @@ export class UserController extends APIController {
         req.body.email,
         req.body.password,
         req.body.collection,
+        this.#keys.pepper
       );
-      const session = await encrypt(data.toJSON().uuid, this.#serverKey);
+      const session = await encrypt(data.toJSON().uuid, this.#keys.server);
 
       res.setHeader(
         "Set-Cookie",
@@ -33,8 +34,9 @@ export class UserController extends APIController {
       const data = await this.#userService.login(
         req.body.email,
         req.body.password,
+        this.#keys.pepper
       );
-      const session = await encrypt(data.toJSON().uuid, this.#serverKey);
+      const session = await encrypt(data.toJSON().uuid, this.#keys.server);
 
       res.setHeader(
         "Set-Cookie",
@@ -55,7 +57,7 @@ export class UserController extends APIController {
   }
   async getMe(req, res) {
     return super.GET(req, res, "getMe", async () => {
-      const uuid = await decrypt(req.headers.cookie, this.#serverKey);
+      const uuid = await decrypt(req.headers.cookie, this.#keys.server);
       const user = await this.#userService.getUserByUuid(uuid);
       return { status: 200, data: user };
     });
