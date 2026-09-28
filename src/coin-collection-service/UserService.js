@@ -3,7 +3,10 @@ import {
   hashPassword,
   verifyPassword,
 } from "../coin-collection-auth/password.js";
-import { AuthenticationError } from "../coin-collection-exception/CoinCollectionError.js";
+import {
+  AuthenticationError,
+  RateLimitError,
+} from "../coin-collection-exception/CoinCollectionError.js";
 import { User } from "../coin-collection-entity/User.js";
 import { UserDTO } from "../coin-collection-dto/UserDTO.js";
 
@@ -24,20 +27,16 @@ export class UserService {
     UserValidator.validatePassword(password);
     const uuid = crypto.randomUUID();
     const passwordHash = await hashPassword(password);
-    const dto = UserDTO.from({
+    const entity = User.from({
       id: uuid,
       email: cleanEmail,
       passwordHash,
       collection,
       createdAt: new Date().toISOString(),
-    });
-    const entity = User.from({
-      ...dto.toJSON(),
-      createdAt: dto.createdAt,
-      passwordHash,
+      pin: { pinHash: null, expiresAt: null, attempts: 0, requests: [] },
     });
     await this.#repo.createUser(entity);
-    return dto;
+    return UserDTO.from(entity.toJSON());
   }
   async login(email, password) {
     const cleanEmail = email.toLowerCase().trim();
@@ -46,8 +45,6 @@ export class UserService {
     const user = await this.#repo.getUserByEmail(cleanEmail);
     if (!user) throw new AuthenticationError("Invalid credentials", "Email");
     const entity = User.from(user);
-    console.log(user);
-
     const ok = await verifyPassword(password, user.passwordHash);
     if (!ok) throw new AuthenticationError("Invalid credentials", "Password");
     return UserDTO.from(entity.toJSON());
@@ -63,14 +60,19 @@ export class UserService {
 
   async putTempPin(index, pin) {
     const user = await this.#repo.getUserByUuid(index.uuid);
-    const pinHash = await hashPassword(pin);
-    const expiresAt = Date.now() + 15 * 60 * 1000;
-    const dto = UserDTO.from({ ...user, pinHash, expiresAt, attempts: 0 });
-    const entity = User.from({
-      ...dto.toJSON(),
-      passwordHash: user.passwordHash,
-    });
-    await this.#repo.putUser(entity);
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000;
+    const limit = 5;
+    user.pin.requests = (user.pin.requests).filter(
+      (t) => now - t < windowMs,
+    );
+    if (user.pin.requests.length >= limit)
+      throw new RateLimitError("Too many PIN requests. Try again later.", 429);
+    user.pin.requests.push(now);
+    user.pin.pinHash = await hashPassword(pin);
+    user.pin.expiresAt = now + windowMs;
+    user.pin.attempts = 0;
+    await this.#repo.putUser(User.from(user));
   }
   async putPassword(email, pin, newPassword) {
     const cleanEmail = email.toLowerCase().trim();

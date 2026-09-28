@@ -58,6 +58,16 @@ export class AuthorizationError extends CoinCollectionError {
     );
   }
 }
+export class RateLimitError extends CoinCollectionError {
+  constructor(message, status){
+    super(
+      message,
+      "RateLimit",
+      {},
+      status
+    )
+  }
+}
 export class OortError extends CoinCollectionError {
   constructor(message, originalError, code, status) {
     super(
@@ -94,7 +104,7 @@ export class ParameterError extends CoinCollectionError {
     super(
       `Parameter Missing: ${message}`,
       "ParameterError",
-      "coin-collection-proxy/getCoin",
+      "coin-collection-proxy/functions/getCoin",
       400,
     );
   }
