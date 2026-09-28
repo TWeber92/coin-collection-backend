@@ -8,5 +8,8 @@ compatibility_flags = [ "nodejs_compat" ]
 enabled = true
 invocation_logs = true
 
-
+[[ratelimits]]
+name = "PIN_RATE_LIMITER"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
 

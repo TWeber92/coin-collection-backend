@@ -1,3 +1,4 @@
+import { RateLimitError } from "../../src/coin-collection-exception/CoinCollectionError";
 import { Main } from "../../src/Main";
 import { sendEmail } from "./mailer";
 
@@ -29,10 +30,16 @@ export const handler = async (event, env) => {
       responseHeaders[name] = value;
     },
   };
+  if (env.PIN_RATE_LIMITER) { //weed out local env
+    const ip = req.headers["cf-connecting-ip"] || "unknown";
+    const { success } = await env.PIN_RATE_LIMITER.limit({ key: ip });
+    if (!success)
+      throw new RateLimitError("Too many requests. Try again later.");
+  }
 
-  await controller.getEmailIndex(req, res)
-  const index = JSON.parse(responseBody)
-  req.body.index = index
+  await controller.getEmailIndex(req, res);
+  const index = JSON.parse(responseBody);
+  req.body.index = index;
   const pin = generatePin();
   await sendEmail(req.body.email, pin, env);
   req.body.pin = pin;

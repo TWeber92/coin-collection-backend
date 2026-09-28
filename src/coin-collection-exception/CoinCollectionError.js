@@ -59,12 +59,12 @@ export class AuthorizationError extends CoinCollectionError {
   }
 }
 export class RateLimitError extends CoinCollectionError {
-  constructor(message, status){
+  constructor(message){
     super(
       message,
       "RateLimit",
       {},
-      status
+      429
     )
   }
 }

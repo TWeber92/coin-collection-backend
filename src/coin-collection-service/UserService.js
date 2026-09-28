@@ -67,7 +67,7 @@ export class UserService {
       (t) => now - t < windowMs,
     );
     if (user.pin.requests.length >= limit)
-      throw new RateLimitError("Too many PIN requests. Try again later.", 429);
+      throw new RateLimitError("Too many PIN requests. Try again later.");
     user.pin.requests.push(now);
     user.pin.pinHash = await hashPassword(pin);
     user.pin.expiresAt = now + windowMs;
