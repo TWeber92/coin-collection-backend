@@ -30,17 +30,9 @@ export const handler = async (event, env) => {
       responseHeaders[name] = value;
     },
   };
-  console.log("rate limiter present:", !!env.PIN_RATE_LIMITER);
-  if (env.PIN_RATE_LIMITER) {
-    //weed out local env
-    // const ip = req.headers["cf-connecting-ip"] || "unknown";
-    // const key = `${ip}:${req.path}`;
-    console.log("rate limit key:", req.path);
-    const { success } = await env.PIN_RATE_LIMITER.limit({ key: req.path });
-    console.log(success);
-    if (!success)
-      throw new RateLimitError("Too many requests. Try again later.");
-  }
+  console.log("here");
+  
+  await main.limitController.checkIp(req, res);
 
   await controller.getEmailIndex(req, res);
   const index = JSON.parse(responseBody);

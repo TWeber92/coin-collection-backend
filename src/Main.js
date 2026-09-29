@@ -5,6 +5,9 @@ import { UserRepository } from "./coin-collection-repository/UserRepository";
 import { OORTStorageClient } from "./coin-collection-repository/OORTStorageClient";
 import { CoinService } from "./coin-collection-service/CoinService";
 import { UserService } from "./coin-collection-service/UserService";
+import { RateLimitController } from "./coin-collection-controller/RateLimitController";
+import { RateLimitService } from "./coin-collection-service/RateLimitService";
+import { RateLimitRepository } from "./coin-collection-repository/RateLimitRepository";
 
 export class Main {
   constructor(env) {
@@ -24,12 +27,18 @@ export class Main {
   #getUserRepo() {
     return new UserRepository(this.#oort);
   }
+  #getLimitRepo(){
+    return new RateLimitRepository(this.#oort)
+  }
 
   #getCoinService() {
     return new CoinService(this.#getCoinRepo());
   }
   #getUserService() {
     return new UserService(this.#getUserRepo());
+  }
+  #getLimitService(){
+    return new RateLimitService(this.#getLimitRepo())
   }
   
   #getUserController() {
@@ -38,9 +47,13 @@ export class Main {
   #getCoinController() {
     return new CoinController(this.#getCoinService());
   }
+  #getLimitController(){
+    return new RateLimitController(this.#getLimitService())
+  }
 
   instantiateControllers() {
     this.coinController = this.#getCoinController();
     this.userController = this.#getUserController();
+    this.limitController = this.#getLimitController();
   }
 }
