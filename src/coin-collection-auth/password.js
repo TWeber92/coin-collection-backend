@@ -20,9 +20,7 @@ export async function hashPassword(password, pepper) {
 
 export async function verifyPassword(password, stored, pepper) {
   const [algo, iterStr, saltHex, hashHex] = stored.split(":");
-  if (algo !== "pbkdf2") {
-    throw new Error(`Unsupported hash algorithm: ${algo}`);
-  }
+  if (algo !== "pbkdf2") throw new Error(`Unsupported hash algorithm: ${algo}`);
   const iterations = parseInt(iterStr, 10);
   const salt = hexToBuffer(saltHex);
   const keyMaterial = await crypto.subtle.importKey(

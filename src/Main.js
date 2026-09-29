@@ -15,20 +15,20 @@ export class Main {
       env.OORT_ACCESS_KEY,
       env.OORT_SECRET_KEY,
       env.OORT_BUCKET,
-    )
-    this.#keys = {server:env.SERVER_KEY, pepper: env.PEPPER_KEY} 
+    );
+    this.#keys = { server: env.SERVER_KEY, pepper: env.PEPPER_KEY };
     this.instantiateControllers();
   }
-  #oort
-  #keys
+  #oort;
+  #keys;
   #getCoinRepo() {
     return new CoinRepository(this.#oort);
   }
   #getUserRepo() {
     return new UserRepository(this.#oort);
   }
-  #getLimitRepo(){
-    return new RateLimitRepository(this.#oort)
+  #getLimitRepo() {
+    return new RateLimitRepository(this.#oort);
   }
 
   #getCoinService() {
@@ -37,18 +37,18 @@ export class Main {
   #getUserService() {
     return new UserService(this.#getUserRepo());
   }
-  #getLimitService(){
-    return new RateLimitService(this.#getLimitRepo())
+  #getLimitService() {
+    return new RateLimitService(this.#getLimitRepo());
   }
-  
+
   #getUserController() {
     return new UserController(this.#getUserService(), this.#keys);
   }
   #getCoinController() {
     return new CoinController(this.#getCoinService());
   }
-  #getLimitController(){
-    return new RateLimitController(this.#getLimitService())
+  #getLimitController() {
+    return new RateLimitController(this.#getLimitService());
   }
 
   instantiateControllers() {

@@ -30,8 +30,6 @@ export const handler = async (event, env) => {
       responseHeaders[name] = value;
     },
   };
-  console.log("here");
-  
   await main.limitController.checkIp(req, res);
 
   await controller.getEmailIndex(req, res);

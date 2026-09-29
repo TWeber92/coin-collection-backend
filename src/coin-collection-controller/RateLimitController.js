@@ -12,8 +12,6 @@ export class RateLimitController extends APIController {
         req.headers["cf-connecting-ip"] ||
         req.headers["local-connecting-ip"] ||
         "unknown";
-      console.log(ip);
-
       await this.#service.checkIp(ip);
       return { status: 200, data: null };
     });

@@ -10,8 +10,6 @@ export class RateLimitRepository {
 
   async getRecord(ip) {
     try {
-        console.log(ip);
-        
       return await this.#oort.getObject(this.#key(ip));
     } catch (error) {
       if (error.code === "NoSuchObjectStat") return { requests: [] };
