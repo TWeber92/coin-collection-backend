@@ -20,6 +20,7 @@ const options = {
 };
 
 const server = createServer(options, async (req, res) => {
+  req.headers["local-connecting-ip"] = req.socket.remoteAddress;
   const url = `https://${req.headers.host}${req.url}`;
 
   const chunks = [];
