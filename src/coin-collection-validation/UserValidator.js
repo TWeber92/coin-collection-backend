@@ -20,23 +20,43 @@ export class UserValidator {
     }
   }
   static validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email)) {
-    throw new ValidationError("email", "Invalid email format");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+      throw new ValidationError("email", "Invalid email format");
+    }
   }
-}
-static validatePasswordPresent(password) {
-  if (!password || typeof password !== "string") {
-    throw new ValidationError("password", "Password is required");
+  static validatePasswordPresent(password) {
+    if (!password || typeof password !== "string") {
+      throw new ValidationError("password", "Password is required");
+    }
   }
-}
 
-static validatePassword(password) {
-  if (!password || typeof password !== "string") {
-    throw new ValidationError("password", "Password is required");
+  static validatePassword(password) {
+    if (!password || typeof password !== "string") {
+      throw new ValidationError("password", "Password is required");
+    }
+    if (password.length < 8) {
+      throw new ValidationError(
+        "password",
+        "Password must be at least 8 characters",
+      );
+    }
   }
-  if (password.length < 8) {
-    throw new ValidationError("password", "Password must be at least 8 characters");
+  static validateCollection(collection) {
+    if (!collection || typeof collection !== "object") {
+      throw new ValidationError({
+        field: "collection",
+        message: "Collection must be an object",
+      });
+    }
+    if (
+      !Array.isArray(collection.favorites) ||
+      !Array.isArray(collection.archive)
+    ) {
+      throw new ValidationError({
+        field: "collection",
+        message: "favorites and archive must be arrays",
+      });
+    }
   }
-}
 }

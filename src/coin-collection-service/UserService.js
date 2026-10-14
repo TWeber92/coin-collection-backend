@@ -18,7 +18,9 @@ export class UserService {
   }
 
   async getUserByUuid(uuid) {
-    return await this.#repo.getUserByUuid(uuid);
+    const user = await this.#repo.getUserByUuid(uuid);
+    const entity = User.from(user);
+    return UserDTO.from(entity.toJSON());
   }
 
   async signup(email, password, collection, pepper) {
@@ -63,9 +65,7 @@ export class UserService {
     const now = Date.now();
     const windowMs = 15 * 60 * 1000;
     const limit = 5;
-    user.pin.requests = (user.pin.requests).filter(
-      (t) => now - t < windowMs,
-    );
+    user.pin.requests = user.pin.requests.filter((t) => now - t < windowMs);
     if (user.pin.requests.length >= limit)
       throw new RateLimitError("Too many PIN requests. Try again later.");
     user.pin.requests.push(now);
@@ -103,5 +103,15 @@ export class UserService {
     const entity = User.from(user);
     await this.#repo.putUser(entity);
     if (error) throw new AuthenticationError(error, "putPassword");
+  }
+  async putUserCollection(id, newCollection) {
+    UserValidator.validateCollection(newCollection);
+    const user = await this.#repo.getUserByUuid(id);
+    user.collection = {
+      favorites: newCollection.favorites,
+      archive: newCollection.archive,
+    };
+    await this.#repo.putUser(User.from(user));
+    return UserDTO.from(user);
   }
 }
