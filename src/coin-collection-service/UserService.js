@@ -60,7 +60,7 @@ export class UserService {
     return index;
   }
 
-  async putTempPin(index, pin) {
+  async putTempPin(index, pin, pepper) {
     const user = await this.#repo.getUserByUuid(index.uuid);
     const now = Date.now();
     const windowMs = 15 * 60 * 1000;
@@ -69,19 +69,19 @@ export class UserService {
     if (user.pin.requests.length >= limit)
       throw new RateLimitError("Too many PIN requests. Try again later.");
     user.pin.requests.push(now);
-    user.pin.pinHash = await hashPassword(pin);
+    user.pin.pinHash = await hashPassword(pin, pepper);
     user.pin.expiresAt = now + windowMs;
     user.pin.attempts = 0;
     await this.#repo.putUser(User.from(user));
   }
-  async putPassword(email, pin, newPassword) {
+  async putPassword(email, pin, newPassword, pepper) {
     const cleanEmail = email.toLowerCase().trim();
     UserValidator.validateEmail(cleanEmail);
     UserValidator.validatePassword(newPassword);
     const user = await this.#repo.getUserByEmail(cleanEmail);
     if (!user) throw new AuthenticationError("User not found", "putPassword");
-    const newPasswordHash = await hashPassword(newPassword);
-    const pinOk = await verifyPassword(pin, user.pin.pinHash);
+    const newPasswordHash = await hashPassword(newPassword, pepper);
+    const pinOk = await verifyPassword(pin, user.pin.pinHash, pepper);
     const clearPin = { pinHash: null, expiresAt: null, attempts: 0 };
     let error;
     if (!pinOk) {

@@ -19,6 +19,7 @@ export class UserDTO {
     return {
       id: this.#id,
       email: this.#email,
+      createdAt: this.#createdAt,
       collection: this.#collection.toJSON(),
     };
   }

@@ -82,14 +82,22 @@ export class UserController extends APIController {
   async putUserCollection(req, res) {
     return super.PUT(req, res, "putUserCollection", async () => {
       const id = await this.#getUserFromCookie(req);
-      const user = await this.#userService.putUserCollection(id, req.body.collection);
+      const user = await this.#userService.putUserCollection(
+        id,
+        req.body.collection,
+      );
       return { status: 200, data: user };
     });
   }
   async putPassword(req, res) {
     return super.POST(req, res, "putPassword", async () => {
       const { email, pin, newPassword } = req.body;
-      await this.#userService.putPassword(email, pin, newPassword);
+      await this.#userService.putPassword(
+        email,
+        pin,
+        newPassword,
+        this.#keys.pepper,
+      );
       return {
         status: 200,
         data: { message: "Password updated successfully." },
@@ -105,7 +113,7 @@ export class UserController extends APIController {
   async putTempPin(req, res) {
     return super.POST(req, res, "putPin", async () => {
       const { index, pin } = req.body;
-      await this.#userService.putTempPin(index, pin);
+      await this.#userService.putTempPin(index, pin, this.#keys.pepper);
       return {
         status: 200,
         data: { message: "If that email is registered, a PIN has been sent." },
