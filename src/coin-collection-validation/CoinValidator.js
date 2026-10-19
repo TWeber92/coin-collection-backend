@@ -20,13 +20,13 @@ export class CoinValidator {
       errors.push("Title must contain title for state name");
       fields.push(coin.title);
     }
-    if (!coin.obverse_thumbnail || coin.obverse_thumbnail === "null") {
+    if (!coin.obverse?.thumbnail || coin.obverse.thumbnail === "null") {
       errors.push("Obverse thumbnail is required");
-      fields.push(coin.obverse_thumbnail);
+      fields.push(coin.obverse?.thumbnail);
     }
-    if (!coin.reverse_thumbnail || coin.reverse_thumbnail === "null") {
+    if (!coin.reverse?.thumbnail || coin.reverse.thumbnail === "null") {
       errors.push("Reverse thumbnail is required");
-      fields.push(coin.reverse_thumbnail);
+      fields.push(coin.reverse?.thumbnail);
     }
     const mintYear = parseInt(coin.min_year);
     if (!coin.min_year || isNaN(mintYear) || mintYear < 1000) {

@@ -30,11 +30,11 @@ export class CoinDTO {
     return new CoinDTO({
       id: numista.id,
       stateName: numista.title
-      .match(/\(([^)]+)\)/)[1]
-      .toLowerCase()
-      .replace(/\s+/g, ""),
-      obvThumb: numista.obverse_thumbnail,
-      revThumb: numista.reverse_thumbnail,
+        .match(/\(([^)]+)\)/)[1]
+        .toLowerCase()
+        .replace(/\s+/g, ""),
+      obvThumb: numista.obverse.thumbnail,
+      revThumb: numista.reverse.thumbnail,
       mintYear: numista.min_year,
     });
   }

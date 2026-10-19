@@ -78,15 +78,15 @@ test("postAllStateCoins stores each valid coin and returns ids", async () => {
     {
       id: 634,
       title: "Quarter (California)",
-      obverse_thumbnail: "https://example.com/obv.jpg",
-      reverse_thumbnail: "https://example.com/rev.jpg",
+      obverse: { thumbnail: "https://example.com/obv.jpg" },
+      reverse: { thumbnail: "https://example.com/rev.jpg" },
       min_year: 2005,
     },
     {
       id: 635,
       title: "Quarter (New York)",
-      obverse_thumbnail: "https://example.com/obv2.jpg",
-      reverse_thumbnail: "https://example.com/rev2.jpg",
+      obverse: { thumbnail: "https://example.com/obv2.jpg" },
+      reverse: { thumbnail: "https://example.com/rev2.jpg" },
       min_year: 2001,
     },
   ];
@@ -126,4 +126,25 @@ test("postAllStateCoins rejects when any item is invalid", async () => {
   );
 
   assert.equal(stored.size, 0);
+});
+
+test("getCoinByStateName throws when coin not found", async () => {
+  const fakeOort = {
+    getObject: async () => {
+      const err = new Error("missing");
+      err.code = "NoSuchObjectStat";
+      throw err;
+    },
+    putObject: async () => ({}),
+  };
+
+  const service = new CoinService(new CoinRepository(fakeOort));
+
+  await assert.rejects(
+    () => service.getCoinByStateName("Atlantis"),
+    (err) => {
+      assert.equal(err.code, "NoSuchObjectStat");
+      return true;
+    },
+  );
 });
