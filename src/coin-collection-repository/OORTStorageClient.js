@@ -8,13 +8,13 @@ import {
 import { XMLParser } from "fast-xml-parser";
 import { OortError } from "../coin-collection-exception/CoinCollectionError";
 export class OORTStorageClient {
-  constructor(accessKey, secretKey, bucket) {
+  constructor(accessKey, bucket) {
     this.client = new S3Client({
-      endpoint: "https://s3-standard.oortech.com",
+      endpoint: "https://s3.cloud.fx.land",
       region: "us-east-1",
       credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretKey,
+        accessKeyId: `JWT:${accessKey}`,
+        secretAccessKey: "not-used",
       },
       forcePathStyle: true,
     });

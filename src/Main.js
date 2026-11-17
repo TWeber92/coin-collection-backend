@@ -12,8 +12,7 @@ import { RateLimitRepository } from "./coin-collection-repository/RateLimitRepos
 export class Main {
   constructor(env) {
     this.#oort = new OORTStorageClient(
-      env.OORT_ACCESS_KEY,
-      env.OORT_SECRET_KEY,
+      env.FULA_JWT,
       env.OORT_BUCKET,
     );
     this.#keys = { server: env.SERVER_KEY, pepper: env.PEPPER_KEY };
