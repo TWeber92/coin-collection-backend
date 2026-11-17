@@ -21,7 +21,7 @@ export class UserRepository {
       const exists = await this.#oort.getObject(indexKey);
       if (exists) throw new ConflictError("User", { email });
     } catch (error) {
-      if (error.code !== "NoSuchObjectStat") throw error;
+      if (error.code !== "NoSuchKey") throw error;
       await this.#oort.putObject(indexKey, { uuid });
       await this.#oort.putObject(userKey, entity);
     }
@@ -32,7 +32,7 @@ export class UserRepository {
     try {
       index = await this.#oort.getObject(indexKey);
     } catch (error) {
-      if (error.code === "NoSuchObjectStat") return null; // email not found
+      if (error.code === "NoSuchKey") return null; // email not found
       throw error; // real error
     }
     const userKey = `users/${index.uuid}.json`;
@@ -44,7 +44,7 @@ export class UserRepository {
     try {
       index = await this.#oort.getObject(indexKey);
     } catch (error) {
-      if (error.code === "NoSuchObjectStat") return null;
+      if (error.code === "NoSuchKey") return null;
       throw error;
     }
     return index;
